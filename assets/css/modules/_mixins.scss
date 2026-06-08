@@ -1,0 +1,7 @@
+// Define a mixin for text selection
+@mixin disable-text-selection {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

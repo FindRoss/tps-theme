@@ -1,3 +1,23 @@
+@use 'modules/mixins' as *;
+@use "modules/about";
+@use "modules/advert";
+@use "modules/breadcrumbs";
+@use "modules/buttons";
+@use "modules/cards";
+@use "modules/contact-form";
+@use "modules/footer";
+@use "modules/global";
+@use "modules/navigation";
+@use "modules/pagination";
+@use "modules/platform";
+@use "modules/player-index";
+@use "modules/playing-card";
+@use "modules/result-tables";
+@use "modules/search";
+@use "modules/single-player";
+@use "modules/typography";
+@use "modules/wordpress-blocks";
+
 :root {
   --tps-base-color: #000;
   --tps-icon-btn-color: #ffffff8c;
@@ -56,30 +76,3 @@ html.light-theme {
   --tps-border-color: #dee2e6;
   --tps-section-bg: #fff;
 }
-
-// Define a mixin for text selection
-@mixin disable-text-selection {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-@import "modules/about";
-@import "modules/advert";
-@import "modules/breadcrumbs";
-@import "modules/buttons";
-@import "modules/cards";
-@import "modules/contact-form";
-@import "modules/footer";
-@import "modules/global";
-@import "modules/navigation";
-@import "modules/pagination";
-@import "modules/platform";
-@import "modules/player-index";
-@import "modules/playing-card";
-@import "modules/result-tables";
-@import "modules/search";
-@import "modules/single-player";
-@import "modules/typography";
-@import "modules/wordpress-blocks";

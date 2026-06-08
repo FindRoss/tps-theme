@@ -1,4 +1,4 @@
-@import 'breakpoints';
+@use 'breakpoints' as *;
 
 .tps-card {
   background-color: var(--tps-bg-secondary-color);
