@@ -1,0 +1,18 @@
+{
+  "name": "tps-block/triton-results",
+  "title": "TPS Triton Results",
+  "description": "A block to display Top Poker Streamers Triton results for hustler casino live and more.",
+  "style": ["file:./triton-results.css", "triton-results-shared-style"],
+  "viewStyle": [ "file:./triton-results-view.css", "triton-results-view-style" ],
+  "editorStyle": "file:./editor-style.css",
+  "category": "formatting",
+  "icon": "id",
+  "keywords": ["tps", "triton", "results", "episode"],
+  "acf": {
+    "mode": "edit",
+    "renderTemplate": "triton-results.php"
+  },
+  "supports": {
+    "anchor": true
+  }
+}

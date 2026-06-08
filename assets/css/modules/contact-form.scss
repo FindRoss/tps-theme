@@ -1,0 +1,28 @@
+/* CONTACT FORM */
+#wpcf7-f3680-p68-o1 form label {
+  font-family: var(--tps-primary-font);
+  margin-bottom: var(--size-400);
+  color: var(--tps-heading-color);
+}
+
+#wpcf7-f3680-p68-o1 form input,
+#wpcf7-f3680-p68-o1 form textarea {
+  background-color: var(--tps-bg-secondary-color);
+  color: var(--tps-text-color);
+  margin-top: var(--size-100);
+  border-radius: var(--tps-border-radius);
+  border: 1px solid var(--tps-border-color);
+  padding: var(--size-200);
+}
+
+#wpcf7-f3680-p68-o1 form label,
+#wpcf7-f3680-p68-o1 form input,
+#wpcf7-f3680-p68-o1 form textarea {
+  width: 100%;
+}
+
+#wpcf7-f3680-p68-o1 form input[type="submit"] {
+  background: var(--tps-primary-color);
+  color: #fff;
+  padding: var(--size-300) var(--size-200);
+}

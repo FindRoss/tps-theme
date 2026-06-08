@@ -1,0 +1,25 @@
+.modal-content {
+  background-color: var(--tps-bg-color);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--tps-border-color);
+}
+
+// Player stats info 
+.results-info-box {
+  
+  &:not(:first-of-type) {
+    margin-top: 1rem;
+  }
+
+  // margin-top: 1rem;
+  background: var(--tps-bg-secondary-color);
+  border-radius: var(--tps-border-radius);
+  padding: var(--size-400);
+
+  &__data {
+    font-weight: bold;
+  }
+}

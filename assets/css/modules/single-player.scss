@@ -1,0 +1,26 @@
+.profile-table__wrapper {
+  border-radius: var(--tps-border-radius);
+  overflow: hidden;
+  border: 1px solid var(--tps-border-color);
+}
+
+.profile-table {
+  width: 100%;
+  color: var(--tps-text-color);
+}
+
+.profile-table td {
+  padding: 0.35rem;
+  width: 50%;
+  vertical-align: top;
+  border-bottom: 1px solid var(--tps-border-color);
+}
+
+.profile-table tr:last-child td {
+  border-bottom: 0px;
+}
+
+.profile-table td:last-child {
+  background: var(--tps-bg-secondary-color);
+  font-weight: bold;
+}

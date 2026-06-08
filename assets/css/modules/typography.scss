@@ -1,0 +1,71 @@
+.ff-main {
+  font-family: var(--tps-primary-font);
+}
+
+.ff-secondary {
+  font-family: var(--tps-secondary-font);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.form-submit,
+.btn {
+  font-family: var(--tps-primary-font);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+}
+
+h1 {
+  font-size: var(--size-700);
+}
+
+h2 {
+  font-size: var(--size-600);
+}
+
+h3 {
+  font-size: var(--size-500);
+}
+
+.fs-xlarge {
+  font-size: var(--size-600);
+}
+
+.fs-large {
+  font-size: var(--size-500);
+}
+
+.fs-medium {
+  font-size: var(--size-400);
+}
+
+.fs-small {
+  font-size: var(--size-300);
+}
+
+.fs-xsmall {
+  font-size: var(--size-200);
+}
+
+.tps-text-muted {
+  color: var(--tps-text-muted-color);
+}
+
+.dropdown-menu {
+  font-family: var(--tps-primary-font);
+}
+
+
+h2+.wp-block-image,
+h3+.wp-block-image {
+  margin-top: var(--size-400);
+}

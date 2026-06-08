@@ -1,0 +1,107 @@
+// Just copying the main style and pasting it here.
+:root {
+  --tps-primary-color: #ff6562;
+  --tps-bg-color: #121212;
+  --tps-bg-reverse-color: #fffafa;
+  --tps-bg-secondary-color: #1d1d1d;
+  --tps-text-color: #d9d9d9;
+  --tps-text-reverse-color: #1c2334;
+  --tps-link-color: #0085cc;
+  --tps-outline-color: rgba(0, 133, 204, 0.3);
+  --tps-link-active-color: #0056b3;
+  --tps-heading-color: #ededed;
+  --tps-text-muted-color: #a1a1a1;
+  --tps-border-color: #2d2d2d;
+  --tps-section-bg: linear-gradient(0deg,
+      rgba(49, 49, 49, 0.99) 1%,
+      rgba(0, 0, 0, 0.5)),
+    linear-gradient(180deg, #000, #000);
+
+  --tps-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --tps-transition: all 0.075s ease-in-out;
+  --tps-border-radius: 0.25rem;
+
+  --tps-primary-font: "Arial", sans-serif;
+  --tps-secondary-font: "Arial", serif;
+
+  /* perfect fourth ratio */
+  --size-100: 0.422rem;
+  --size-200: 0.563rem;
+  --size-300: 0.75rem;
+  --size-400: 1rem;
+  --size-500: 1.33rem;
+  --size-600: 1.77rem;
+  --size-700: 2.36rem;
+  --size-800: 3.15rem;
+  --size-900: 4.2rem;
+}
+
+html.light-theme {
+  --tps-primary-color: #c73638;
+  --tps-bg-color: #f6f6f6;
+  --tps-bg-reverse-color: #121212;
+  --tps-bg-secondary-color: #ffffff;
+  --tps-text-color: #1c2334;
+  --tps-text-reverse-color: #ededed;
+  --tps-link-color: #0074b3;
+  --tps-link-active-color: #0056b3;
+  --tps-heading-color: #1a1a1a;
+  --tps-text-muted-color: #666;
+  --tps-border-color: #dee2e6;
+  --tps-section-bg: #fff;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.tps-btn {
+  color: inherit;
+  font-weight: bold;
+  text-decoration: none;
+  padding : var(--size-200) var(--size-400);
+  border-radius: var(--tps-border-radius);
+  border: 2px solid transparent;
+}
+
+.tps-btn--big {
+  font-size: 20px;
+  padding: var(--size-300) var(--size-500);
+}
+
+.tps-btn__primary {
+  background-color: var(--tps-primary-color);
+  color: #fff;
+}
+
+.tps-btn__primary:hover {
+  color: #fff;
+}
+
+.tps-btn__secondary {
+  background-color: var(--tps-bg-reverse-color);
+  color: var(--tps-text-reverse-color);
+}
+
+.tps-btn__secondary:hover {
+  background-color: var(--tps-bg-reverse-color);
+  color: var(--tps-text-reverse-color);
+}
+
+.tps-btn__outline {
+  border: 2px solid var(--tps-heading-color);
+  background-color: var(--tps-bg-color);
+  color: var(--tps-heading-color);
+}
+  
+.tps-btn__outline:hover {
+  background: var(--tps-bg-reverse-color);
+  color: var(--tps-text-reverse-color);
+}
+
+

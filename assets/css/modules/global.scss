@@ -1,0 +1,237 @@
+@import 'breakpoints';
+
+
+// Dealing with the admin bar on TPS
+html {
+  margin-top: 0px!important;
+}
+
+body.logged-in.admin-bar header {
+  padding-top: 46px;
+}
+
+body {
+  background-color: var(--tps-bg-color);
+  color: var(--tps-text-color);
+  position: relative;
+  font-family: var(--tps-secondary-font);
+  line-height: 1.5;
+}
+
+.wp-lightbox-overlay .scrim {
+  background-color: var(--tps-bg-secondary-color) !important;
+}
+
+.wp-lightbox-overlay svg {
+  fill: var(--tps-text-color);
+}
+
+
+.large-description p {
+  font-size: var(--size-500);
+  color: var(--tps-text-color);
+}
+
+.nav-pill-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: start;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.nav-pill-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.nav-pill-item {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.nav-pill {
+  font-family: var(--tps-primary-font);
+  background-color: var(--tps-bg-secondary-color);
+  color: var(--tps-text-color);
+  padding: var(--size-200);
+  font-size: var(--size-300);
+  font-weight: 200;
+  text-wrap: nowrap;
+}
+
+.nav-pill.is-active {
+  background-color: #fff;
+  color: #000;
+}
+
+.light-theme .nav-pill.is-active {
+  background-color: #1a1e21;
+  /* border-color: #191c1f; */
+  border-color: var(--tps-border-color);
+  color: #fff;
+}
+
+@media screen and (min-width: 768px) {
+  .nav-pill {
+    padding: var(--size-300);
+    font-size: var(--size-400);
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .nav-pill-wrapper {
+    gap: 1rem;
+    justify-content: center;
+    overflow: auto;
+  }
+}
+
+.tps-border-top-1 {
+  border-top: 1px solid var(--tps-border-color);
+}
+
+.page-main {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+a {
+  color: var(--tps-link-color);
+}
+
+a:hover {
+  color: var(--tps-link-active-color);
+}
+
+.img-border {
+  border: 1px solid var(--tps-boder-color);
+}
+
+.author-intro {
+  background-color: var(--tps-bg-secondary-color);
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Spinning animation: Define keyframe animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinning-icon {
+  animation: spin 2s linear infinite;
+  /* Adjust duration and timing function as needed */
+}
+
+.post-meta {
+  font-size: 14px;
+}
+
+.post-meta__separator {
+  color: var(--tps-text-muted-color);
+}
+
+
+.custom-brand-hendonmob {
+  background-image: url("https://toptwitchstreamers.com/wp-content/uploads/2023/06/the-hendonmob-icon__32x32.png");
+}
+
+.player-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.player-col {
+  width: 48%;
+}
+
+.player-col.player-col-4 {
+  width: 48%;
+}
+
+@media screen and (min-width: 768px) {
+  .player-col {
+    width: 32.5%;
+  }
+
+  .player-col.player-col-4 {
+    width: 49%;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .player-col.player-col-4 {
+    width: 24%;
+  }
+}
+
+::selection {
+  color: #fff;
+  background: #1d3557;
+}
+
+.tps-featured-img {
+  border: 1px solid var(--tps-border-color);
+}
+
+/* Section Heading */
+
+.section-heading {
+  // position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--tps-border-color);
+  padding: var(--size-200) 0;
+
+  &__title {
+    font-size: 18px; 
+    font-weight: 800;
+    color: var(--tps-heading-color);
+  }
+}
+
+// .section-heading::before {
+  // background-color: var(--tps-primary-color);
+  // content: "";
+  // height: 8px;
+  // left: 0;
+  // position: absolute;
+  // right: unset;
+  // top: -1px;
+  // width: 80px;
+  // border-bottom-left-radius: 20px;
+  // border-bottom-right-radius: 20px;
+// }
+
+
+.section-heading a {
+  color: var(--tps-link-color);
+}
+
+.front-hcl-results {
+  display: grid;
+  grid-template-columns: 1fr; 
+  grid-gap: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  .front-hcl-results {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 3rem;
+  }
+}

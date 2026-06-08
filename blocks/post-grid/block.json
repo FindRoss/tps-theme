@@ -1,0 +1,18 @@
+{
+  "name": "tps-block/post-grid",
+  "title": "TPS Post Grid",
+  "description": "A block to display a series of Posts on Top Poker Streamers.",
+  "style": ["file:./post-grid.css", "post-grid-shared-style"],
+  "viewStyle": [ "file:./post-grid-view.css", "post-grid-view-style" ],
+  "editorStyle": "file:./editor-style.css",
+  "category": "formatting",
+  "icon": "id",
+  "keywords": ["tps", "post", "tps post card", "posts"],
+  "acf": {
+    "mode": "edit",
+    "renderTemplate": "post-grid.php"
+  },
+  "supports": {
+    "anchor": true
+  }
+}

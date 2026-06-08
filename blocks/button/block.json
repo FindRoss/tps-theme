@@ -1,0 +1,18 @@
+{
+  "name": "tps-block/button",
+  "title": "TPS Button",
+  "description": "A block to display Top Poker Streamers buttons.",
+  "style": ["file:./button.css", "button-shared-style"],
+  "viewStyle": [ "file:./button-view.css", "button-view-style" ],
+  "editorStyle": "file:./editor-style.css",
+  "category": "formatting",
+  "icon": "button",
+  "keywords": ["button", "tps button", "link", "anchor"],
+  "acf": {
+    "mode": "edit",
+    "renderTemplate": "button.php"
+  },
+  "supports": {
+    "anchor": true
+  }
+}

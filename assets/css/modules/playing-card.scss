@@ -1,0 +1,21 @@
+.playing-card {
+  background: #ffffff;
+  color: #000000;
+  display: inline-block;
+  font-weight: bold;
+  border: 1px solid var(--tps-border-color);
+  border-radius: var(--tps-border-radius);
+  min-width: 27px;
+  text-align: center;
+  padding-left: 0.05rem;
+  padding-right: 0.05rem;
+}
+
+.playing-card:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
+.playing-card img {
+  height: 16px;
+  width: auto;
+}

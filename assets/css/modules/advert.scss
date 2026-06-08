@@ -1,0 +1,19 @@
+.sidebar-column {
+  height: 100%;
+}
+
+.ad-img {
+  margin-top: var(--size-600);
+  transition: filter 0.3s ease-in-out;
+}
+
+@media screen and (min-width: 992px) {
+  .ad-img {
+    margin-top: var(--size-400);
+  }
+}
+
+/* Hover effect: Increase brightness on link hover */
+.ad-link:hover .ad-img {
+  filter: brightness(1.5);
+}

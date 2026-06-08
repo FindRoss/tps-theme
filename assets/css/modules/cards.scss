@@ -1,0 +1,363 @@
+@import 'breakpoints';
+
+.tps-card {
+  background-color: var(--tps-bg-secondary-color);
+  color: var(--tps-heading-color);
+  box-shadow: var(--tps-box-shadow);
+  overflow: hidden;
+  transition: 0.15s filter ease-in-out;
+}
+
+.tps-card-title {
+  margin-bottom: 0px;
+}
+
+.tps-card-link {
+  color: inherit;
+  display: block;
+  border-radius: var(--tps-border-radius);
+  outline: 3px solid transparent;
+  transition: 0.05s outline ease-out;
+}
+
+.tps-card-link:hover .tps-card__title {
+  text-decoration: underline;
+  color: var(--tps-heading-color);
+}
+
+.tps-card-link:hover p, 
+.tps-card-link:hover div,
+.tps-card-link:hover span {
+  color: var(--tps-heading-color);
+}
+
+.tps-card-link:hover .tps-card-image {
+  opacity: 0.9;
+}
+
+.tps-card-link:active,
+.tps-card-link:focus {
+  outline: 3px solid var(--tps-outline-color);
+ 
+}
+
+.tps-card-link:active .tps-card,
+.tps-card-link:hover .tps-card {
+  filter: brightness(0.9);
+}
+
+.light-theme .tps-card-link:active .tps-card,
+.light-theme .tps-card-link:hover .tps-card {
+  filter: brightness(0.97);
+}
+
+.tps-card-img {
+  border: 1px solid var(--tps-border-color);
+}
+
+.tps-card-meta {
+  font-size: 14px;
+  color: var(--tps-text-muted-color);
+  margin-top: var(--size-300);
+}
+
+.tps-card-media img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.tps-card-streamer-img {
+  border: 1px solid var(--tps-border-color);
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* Guide Card */ 
+
+.gyg-card.tps-card-link {
+  padding: 1px; // This adds a little space between the outline and the card.
+}
+
+
+.gyg-card__img-container {
+  position: relative;
+  max-width: 100%;
+  height: 250px;
+  border-radius: var(--tps-border-radius);
+  background-position: center top;
+  background-size: cover;
+  padding: var(--size-200);
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  overflow: hidden;
+  // transition: all 1s ease-in-out;
+
+  @media screen and (min-width: $breakpoint-large) {
+    height: 400px;
+  }
+}
+
+.gyg-card__img-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;    
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 85%);
+}
+
+.gyg-card__title {
+  font-family: var(--tps-primary-font);
+  font-size: var(--size-500);
+  font-weight: bold;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.bbc-card {
+  margin-bottom: 3px;
+}
+
+.bbc-card img {
+  border-radius: var(--tps-border-radius);
+  width: 100%;
+  height: auto;
+}
+
+.bbc-card__layout {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1rem;
+}
+
+.bbc-card__media {
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+@media screen and (min-width: $breakpoint-medium) {
+  .bbc-card__layout {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: 1fr 2fr; 
+  }
+
+  .bbc-card__content {
+    padding: var(--size-100);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bbc-card__media {
+    margin: 0;
+
+    img {
+      border-radius: 10px;
+    }
+  }
+}
+
+.result-card__layout {
+  display: grid;
+  grid-template-columns: 74px 1fr;
+  grid-gap: var(--size-400);
+}
+
+.result-card__number {
+    color: rgb(138, 140, 142);
+    // color: var(--tps-link-color);
+    font-family: var(--tps-primary-font);
+    font-size: 34px;
+    line-height: 34px;
+    letter-spacing: -0.64px;
+}
+
+.result-card__content {
+  font-size: 1rem;
+}
+
+
+
+.white-card {
+  padding-top: var(--size-300);
+  border-top: 1px solid var(--tps-border-color);
+  
+  &__meta {
+    font-size: 14px; 
+    color: var(--tps-text-muted-color);
+    margin-top: var(--size-300);
+  }
+}
+
+.white-cards-col .white-card:first-child {
+  border-top: 0px;
+}
+
+
+.ny-card {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--tps-border-color);
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: var(--size-500);
+  }
+
+  &__date {
+    color: var(--tps-text-muted-color);
+    margin-top: var(--size-300);
+    font-size: 14px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+    @media screen and (min-width: $breakpoint-medium) {
+      .ny-card__layout {
+        grid-template-columns: 1fr 2fr;
+        grid-gap: var(--size-500);
+      }
+
+      .ny-card__date {
+        justify-self: flex-end;
+      }
+    }
+}
+
+
+// Triton Series Taxonomy Header
+.series-header {
+  margin-top: 1rem;
+
+  &__layout {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+
+  &__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--tps-border-radius);
+  }
+
+  &__content {
+    padding: 1rem 0;
+    background: var(--tps-bg-color);
+    border-radius: var(--tps-border-radius);
+  }
+
+  &__title {
+    font-size: var(--size-600);
+  }
+
+  &__date {
+    color: var(--tps-text-muted-color);
+  }
+}
+
+
+@media screen and (min-width: $breakpoint-medium) {
+  .series-header__layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  .series-header {
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0rem 0.5rem;
+      border-bottom-right-radius: 0px;
+      border-top-right-radius: 0px;
+
+    }
+  }
+}
+
+.series-event-card--wrapper {
+  border-top: 1px solid var(--tps-border-color);
+}
+
+.series-event-card {
+  &__event {
+    color: var(--tps-text-muted-color);
+  }
+
+  &__title {
+    margin-top: var(--size-300);
+  }
+}
+
+// Triton Series Page (Listing all Triton Series on it)
+.series-card {
+  background: var(--tps-bg-secondary-color);
+  border-radius: var(--tps-border-radius);
+  
+  &:not(:first-child) {
+      margin-top: 2rem;
+  }
+
+  &__layout {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  &__content {
+    margin-top: 1rem;
+    padding: var(--size-300);
+  }
+
+  &__date {
+    color: var(--tps-text-muted-color);
+  }
+
+  &__image {
+    width: 100%; 
+    height: auto;
+    border-radius: var(--tps-border-radius);
+  }
+}
+
+
+@media screen and (min-width: $breakpoint-medium) {
+  .series-card {
+
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
+
+    &__layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    &__content {
+      margin-top: 0px;
+      padding: 1rem;
+    }
+
+    &__image {
+      margin-top: 0;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
+  }
+}
+

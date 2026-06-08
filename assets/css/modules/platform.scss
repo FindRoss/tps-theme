@@ -1,0 +1,154 @@
+@import 'breakpoints';
+
+.platform-menu-wrapper {
+  background: var(--tps-base-color);
+  border-top: 1px solid var(--tps-border-color);
+  border-bottom: 1px solid var(--tps-border-color);
+}
+
+.platform-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // background-color: var(--tps-bg-secondary-color);
+
+  &__children {
+    display: none;
+  }
+
+  &__item {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    display: inline-block;
+  }
+
+  &__link {
+    margin-right: var(--size-200);
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &__link.active {
+    font-weight: bold;
+    pointer-events: none;
+  }
+
+  &__parent-link {
+    padding-left: 0rem;
+
+    img {
+      margin-right: var(--size-300);
+    }
+  }
+
+  &__child-link:last-child {
+    padding-right: 0rem;
+  }
+
+  &__item {
+    text-transform: capitalize;
+  }
+
+  &__icon svg {
+    width: 14px; 
+    height: 14px;
+
+    path {
+      fill: var(--tps-text-color);
+      stroke: var(--tps-text-color);
+      stroke-width: 2px;
+    }
+  } 
+
+ 
+  @media screen and (min-width: $breakpoint-small) {
+    justify-content: flex-start;
+
+    &__parent {
+      border-right: 1px solid var(--tps-border-color);
+    }
+
+    &__children {
+      display: flex;
+    }
+
+  }
+}
+
+// Layout for the content on a platform page
+@media screen and (min-width: $breakpoint-large) {
+  .platform-row {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    flex-wrap: nowrap;
+
+
+    & > * {
+      flex-basis: 70%;
+      width: 70%;
+    }
+
+    .full-width-element {
+      flex-basis: 100%;
+      width: 100%;
+       
+      > img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+// Dropdown
+
+.tps-dropdown {
+  position: relative;
+
+  .tps-dropdown__button {
+    background: transparent;
+    outline: none;
+    border: none;
+    border: 4px solid transparent;
+    border-radius: var(--tps-border-radius);
+
+    &:focus {
+      border: 4px solid var(--tps-icon-btn-color);
+    }
+
+
+    svg path {
+      // Same color that is on the nav svg
+      fill: var(--tps-icon-btn-color);
+    }
+  }
+
+  .tps-dropdown__menu {
+    position: absolute;
+    width: auto;
+    right: 0px; // same as the padding
+    top: 54px;
+    z-index: 9999;
+    padding: 1rem;
+    min-width: 175px;
+    font-size: var(--size-500);
+    background-color: var(--tps-base-color);
+    color: var(--tps-link-color);
+    list-style-type: none;
+    border: 1px solid var(--tps-border-color);
+    border-radius: var(--tps-border-radius);
+    display: none;
+
+    &.active {
+        display: block;
+    }
+
+    a {
+      text-transform: capitalize;
+      cursor: pointer;
+    }
+  }
+}

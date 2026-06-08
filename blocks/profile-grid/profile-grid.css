@@ -1,0 +1,25 @@
+/* $breakpoint-small: 576px;
+$breakpoint-medium: 768px;
+$breakpoint-large: 992px; */
+
+.pg-row {
+  margin-bottom: 1rem;
+}
+
+.pg-row .pg-col {
+  margin-top: 0.5rem;
+}
+
+@media screen and (min-width: 992px) {
+  .pg-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+  }
+
+  .pg-col {
+    flex-grow: 1;
+    margin: 0 4px; /* Adjust margin as needed */
+    width: 32%;
+  }
+}

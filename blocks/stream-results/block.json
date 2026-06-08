@@ -1,0 +1,18 @@
+{
+  "name": "tps-block/stream-results",
+  "title": "TPS Stream Results",
+  "description": "A block to display Top Poker Streamers stream results for hustler casino live and more.",
+  "style": ["file:./stream-results.css", "stream-results-shared-style"],
+  "viewStyle": [ "file:./stream-results-view.css", "stream-results-view-style" ],
+  "editorStyle": "file:./editor-style.css",
+  "category": "formatting",
+  "icon": "id",
+  "keywords": ["tps", "stream", "results", "episode", "streams"],
+  "acf": {
+    "mode": "edit",
+    "renderTemplate": "stream-results.php"
+  },
+  "supports": {
+    "anchor": true
+  }
+}
