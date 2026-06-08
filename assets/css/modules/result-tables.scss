@@ -377,3 +377,19 @@ select#rows-per-page {
 }
 
 
+
+// Theme-aware baseline for any plain HTML table (Bootstrap's .table etc.
+// don't set colors that adapt to light/dark mode). More specific table
+// styles elsewhere in this file (e.g. .tps-table-results, .player-hcl-results
+// table) still win via specificity, so this only affects untouched tables.
+table {
+  background-color: var(--tps-bg-color);
+  color: var(--tps-text-color);
+
+  th,
+  td {
+    color: var(--tps-text-color);
+    background-color: var(--tps-bg-color);
+    border-color: var(--tps-border-color);
+  }
+}
