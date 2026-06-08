@@ -48,7 +48,6 @@ if ($query->have_posts()) :
             </div>
             <div class="ny-card__content">
               <h3 class="ny-card__title tps-card__title"><?php the_title(); ?></h3>
-              <div class="ny-card__date"><?php echo get_the_date('M d'); ?></div>
             </div>
           </div>
         </a>

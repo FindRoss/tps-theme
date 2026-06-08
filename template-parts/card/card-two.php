@@ -18,10 +18,9 @@
         <?php endif; ?>
         <?php if (get_post_type() === 'post') { ?>
           <div class="tps-card-meta">
-            <?php 
-              echo get_the_date('M d');
+            <?php
               if (get_post_type() === 'post') {
-                echo ' | ' . $cat[0]->name;
+                echo $cat[0]->name;
               }; ?>
           </div>
         <?php } ?>
