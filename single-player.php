@@ -114,8 +114,8 @@
                         <td>Type</td>
                         <td>
                           <?php foreach($value as $type) { ?>
-                            <?php 
-                              $profile_link = get_term_link($type->term_taxonomy_id, 'profile_type');  
+                            <?php
+                              $profile_link = get_term_link($type->term_id, 'profile_type');
                               $profile_term_name = substr($type->name, 0, -1);
                               if ($type->name == 'Coaches') {
                                 $profile_term_name = 'Coach';
@@ -229,38 +229,33 @@
   </div><!-- .container --> 
 </div><!-- .post --> 
 
-<!-- YOUTUBE API CALL -->
-<?php if ($youtube_id) { ?>
-  <script type="text/javascript">
-
-    function handleNumbers (num) {
-      let finalNum = undefined; 
+ <!-- if (false && $youtube_id) {
+  <!-- <script type="text/javascript"> 
+    function handleNumbers(num) {
+      let finalNum = undefined;
 
       if (num < 999) return num;
 
-      // Takes a number
       if (num > 999 && num < 999999) {
         console.log('why not here?')
         finalNum = Math.round(num / 1000) + 'K';
-      } 
+      }
 
       if (num > 999999) {
         finalNum = Math.round(num / 1000000) + 'M';
       }
-      
-      return finalNum ;
-    };
 
-    fetch('https://youtube.googleapis.com/youtube/v3/channels?key=AIzaSyCoZeOJ32QTo_6P7fh6b8vnaLf0pJ-qEw0&id=<?php echo $youtube_id; ?>&part=statistics,snippet,id')
+      return finalNum;
+    }
+
+    fetch('https://youtube.googleapis.com/youtube/v3/channels?key=YOUTUBE_API_KEY>&id=<?php echo $youtube_id; ?>&part=statistics,snippet,id')
       .then(response => response.json())
       .then(data => {
-
-        // End the whole process here if something is wrong.
         if (!data.items) return;
 
-        const { 
-          subscriberCount, 
-          viewCount, 
+        const {
+          subscriberCount,
+          viewCount,
           videoCount
         } = data.items[0].statistics;
 
@@ -268,18 +263,14 @@
           publishedAt
         } = data.items[0].snippet;
 
-        // Can use id for videos
         const id = data.items[0].id;
-        
-        // Get table
+
         const table = document.querySelector('.profile-table__body');
-        
-        // Create element: subscriberCount
+
         let trSub = document.createElement('tr');
         let tdSubOne = document.createElement('td');
         let tdSubTwo = document.createElement('td');
 
-        // Numbers: Sub Count
         let tdSubOneContent = document.createTextNode('YouTube subscribers');
         let tdSubTwoContent = document.createTextNode(handleNumbers(Number(subscriberCount)));
 
@@ -295,7 +286,6 @@
         let tdViewOne = document.createElement('td');
         let tdViewTwo = document.createElement('td');
 
-        // Numbers: View Count
         console.log('View Count: ', handleNumbers(Number(viewCount)));
         let tdViewOneContent = document.createTextNode('YouTube views');
         let tdViewTwoContent = document.createTextNode(handleNumbers(Number(viewCount)));
@@ -312,7 +302,6 @@
         let tdVidOne = document.createElement('td');
         let tdVidTwo = document.createElement('td');
 
-        // Numbers: Video Count
         let tdVidOneContent = document.createTextNode('YouTube videos');
         let tdVidTwoContent = document.createTextNode(handleNumbers(Number(videoCount)));
 
@@ -323,10 +312,8 @@
         trVid.appendChild(tdVidTwo);
 
         table.appendChild(trVid);
-        
       });
   </script>
-<?php }; ?>
-<!-- END YOUTUBE API CALL -->
+  } -->
 
 <?php get_footer(); ?>
