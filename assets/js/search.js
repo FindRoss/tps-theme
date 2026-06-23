@@ -1,197 +1,189 @@
-// let resultsCount = 0;
-// New York Times: https://www.nytimes.com/search?dropmab=false&query=asd&sort=best
-
 const resultsContainer = document.getElementById('resultsContainer');
 const resultsCountEl = document.getElementById('resultsCount');
-let resultsCount = 0;
+const spinner = document.getElementById('spinner');
+const filterButtons = document.querySelectorAll('#post-type-filters .nav-pill');
 
 const profileImg = 'https://toppokerstreamers.com/wp-content/uploads/2024/08/anonymous-person-profile__100x100-jpg.webp';
 
-function sortByRelevance(array, searchTerm) {
-	return array.slice().sort((a, b) => {
-		const relevanceA = calculateRelevance(a.title['rendered'], searchTerm);
-		const relevanceB = calculateRelevance(b.title['rendered'], searchTerm);
+let activeFilter = 'all';
+let currentPage = 1;
 
-		return relevanceB - relevanceA; // Sort in descending order of relevance
+function generateCard(result) {
+	const isPlayer = result.postType === 'player';
+
+	if (isPlayer) {
+		return `
+			<div class="col-6 col-md-4 mt-3">
+				<div class="h-100">
+					<a class="tps-card-link" href="${result.link}">
+						<div class="tps-card p-2 p-lg-3 rounded h-100">
+							<div class="tps-card__media d-flex justify-content-center">
+								${result.image ? `
+									<img src="${result.image}" alt="${result.title}" style="width: 100px; height: 100px;" class="rounded-circle" width="100" height="100" />
+								` : `
+									<img src="${profileImg}" alt="placeholder image" style="width: 100px; height: 100px;" class="rounded-circle" width="100" height="100" />
+								`}
+							</div>
+							<div class="pt-3">
+								<h3 class="h6 text-center tps-card__title m-0 text-break">${result.title}</h3>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>`;
+	}
+
+	return `
+		<div class="col-6 col-lg-3 mt-3">
+			<div class="h-100">
+				<a class="tps-card-link h-100" href="${result.link}">
+					<div class="tps-card h-100 rounded">
+						<div class="card-body">
+							<span class="text-uppercase" style="color: #0056b3;">${result.postType}</span>
+							<h3 class="tps-card__title m-0">${result.title}</h3>
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>`;
+}
+
+function groupByType(results) {
+	return results.reduce((groups, item) => {
+		const type = item.postType;
+		if (!groups[type]) groups[type] = [];
+		groups[type].push(item);
+		return groups;
+	}, {});
+}
+
+async function fetchSearch(searchTerm, postType, page) {
+	const params = new URLSearchParams({
+		term: searchTerm,
+		type: postType,
+		page: page
+	});
+
+	const response = await fetch(`${wpApiSettings.root}custom/v2/search/?${params}`);
+	return response.json();
+}
+
+async function displayResults(searchTerm, postType, page) {
+	const placeholder = `<div class="col-12 col-md-4 mt-4"><div class="search-result-placeholder"><span class="placeholder-circle circle-rounded"></span></div></div>`;
+	resultsContainer.innerHTML = `<div class="row">${placeholder.repeat(6)}</div>`;
+	spinner.style.display = '';
+
+	try {
+		const data = await fetchSearch(searchTerm, postType, page);
+		const { results, totalPosts, totalPages, currentPage: cp } = data;
+
+		console.log(results);
+
+		let output = '';
+		if (results.length > 0) {
+			const grouped = groupByType(results);
+			const sectionOrder = [
+				{ key: 'player', label: 'Players' },
+				{ key: 'page', label: 'Pages' },
+				{ key: 'post', label: 'Posts' },
+			];
+
+			sectionOrder.forEach(({ key, label }) => {
+				if (grouped[key]?.length) {
+					output += `<h2 class="mt-4">${label}</h2><div class="row">`;
+					grouped[key].forEach(r => { output += generateCard(r); });
+					output += '</div>';
+					delete grouped[key];
+				}
+			});
+
+			Object.keys(grouped).forEach(type => {
+				output += `<h2 class="mt-4">${type}</h2><div class="row">`;
+				grouped[type].forEach(r => { output += generateCard(r); });
+				output += '</div>';
+			});
+
+			if (totalPages > 1) {
+				output += buildPagination(cp, totalPages);
+			}
+		} else {
+			output = '<p class="mt-4">No results found.</p>';
+		}
+
+		resultsCountEl.innerHTML = `<div class="results-count rounded py-2 px-3">Showing ${totalPosts} results for <span class="results-count__term">${searchTerm}</span></div>`;
+		resultsContainer.innerHTML = output;
+	} catch (error) {
+		console.error(error);
+		resultsContainer.innerHTML = '<p class="mt-4">Something went wrong. Please try again.</p>';
+		resultsCountEl.innerHTML = '';
+	}
+
+	spinner.style.display = 'none';
+}
+
+function buildPagination(current, total) {
+	let html = '<nav class="mt-4"><ul class="pagination justify-content-center">';
+
+	if (current > 1) {
+		html += `<li class="page-item"><button class="page-link" data-page="${current - 1}">&laquo; Prev</button></li>`;
+	}
+
+	for (let i = 1; i <= total; i++) {
+		html += `<li class="page-item ${i === current ? 'active' : ''}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+	}
+
+	if (current < total) {
+		html += `<li class="page-item"><button class="page-link" data-page="${current + 1}">Next &raquo;</button></li>`;
+	}
+
+	html += '</ul></nav>';
+	return html;
+}
+
+function getSearchTerm() {
+	return document.getElementById('searchInput').value.trim();
+}
+
+function setActiveButton(postType) {
+	filterButtons.forEach(btn => {
+		btn.classList.toggle('is-active', btn.dataset.postType === postType);
 	});
 }
 
-function calculateRelevance(value, searchTerm) {
-	const regex = new RegExp(searchTerm, 'gi');
-	const matches = value.match(regex);
+// Filter button clicks
+filterButtons.forEach(btn => {
+	btn.addEventListener('click', () => {
+		const searchTerm = getSearchTerm();
+		if (!searchTerm) return;
 
-	return matches ? matches.length : 0;
-}
+		activeFilter = btn.dataset.postType;
+		currentPage = 1;
+		setActiveButton(activeFilter);
+		displayResults(searchTerm, activeFilter, currentPage);
+	});
+});
 
-function generatePageCard(page) {
-	const { link, title } = page;
+// Pagination clicks
+resultsContainer.addEventListener('click', (e) => {
+	const btn = e.target.closest('[data-page]');
+	if (!btn) return;
 
-	return `
-		<div class="col-6 col-lg-3 mt-3">
-			<div class="h-100">
-				<a class="tps-card-link h-100" href="${link}">
-					<div class="tps-card h-100 rounded">
-						<div class="card-body">
-							<h3 class="tps-card__title m-0">${title.rendered}</h5>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
-	`;
-}
+	const searchTerm = getSearchTerm();
+	if (!searchTerm) return;
 
-function generatePostCard(post) {
-	let term = post._embedded["wp:term"][0][0]?.name;
+	currentPage = parseInt(btn.dataset.page);
+	displayResults(searchTerm, activeFilter, currentPage);
+	window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-	return `
-		<div class="col-6 col-lg-3 mt-3">
-			<div class="h-100">
-				<a class="tps-card-link h-100" href="${post.link}">
-					<div class="tps-card h-100 rounded"> 
-						<div class="card-body">
-							<span class="text-uppercase" style="color: #0056b3;">${term ? term : ''}</span>
-							<h3 class="tps-card__title m-0">${post.title.rendered}</h5>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>
-	`;
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+	const searchTerm = getSearchTerm();
 
-}
-
-function generatePlayerCard(player) {
-	return `
-		<div class="col-6 col-md-4 mt-3">
-			<div class="h-100">
-				<a class="tps-card-link" href="${player.link}">
-					<div class="tps-card p-2 p-lg-3 rounded h-100">
-						<div class="tps-card__media d-flex justify-content-center">
-							${player.image ? (` 
-								<img src="${player.image}" alt="${player.title}" style="width: 100px; height: 100px;" class="rounded-circle" width="100" height="100" />
-							`) : ` 
-								<img src="${profileImg}" alt="placeholder image" style="width: 100px; height: 100px;" class="rounded-circle" width="100" height="100" />
-							`}
-						</div>
-						<div class="pt-3">
-							<h3 class="h6 text-center tps-card__title m-0 text-break">${player.title}</h3>
-						</div>
-					</div>
-				</a>
-			</div>
-		</div>	
-	`;
-}
-
-async function fetchAndSort(type, searchTerm) {
-	let perPage = 12;
-
-	try {
-		const response = await fetch(`${wpApiSettings.root}wp/v2/${type}?search=${searchTerm}&per_page=${perPage}&_embed`);
-		const data = await response.json();
-
-		if (data.length > 0) {
-			const sortedArray = sortByRelevance(data, searchTerm);
-			resultsCount += data.length;
-			return sortedArray;
-
-		} else {
-			return []; // Return an empty array if no data is available
-		}
-	} catch (error) {
-		console.error('ERROR: ', error);
-		throw error; // Re-throw the error to be handled by the calling code
-	}
-}
-
-async function customFetch(searchTerm) {
-	try {
-		const response = await fetch(`${wpApiSettings.root}custom/v1/search/?search=${searchTerm}`);
-		const data = await response.json();
-		resultsCount += data.length;
-		return data;
-	} catch (err) {
-		console.error(err);
-	}
-}
-
-// Fetch data
-async function fetchSearch(searchTerm) {
-
-	const [players, posts, pages] = await Promise.all([
-		customFetch(searchTerm),
-		fetchAndSort('posts', searchTerm),
-		fetchAndSort('pages', searchTerm)
-	]);
-
-	return { players, posts, pages };
-};
-
-// Display results
-async function displayResults(searchTerm) {
-	const { players, posts, pages } = await fetchSearch(searchTerm);
-
-	let output = "";
-
-	if (pages.length !== 0) {
-		output += '<h2 class="mt-4">Pages</h2>';
-		output += '<div class="row">';
-		pages.map(d => {
-			output += generatePageCard(d);
-		});
-		output += '</div>';
-	}
-
-	if (players.length != 0) {
-		output += '<h2 class="mt-4">Profiles</h2>';
-		output += '<div class="row">';
-		players.map(d => {
-			output += generatePlayerCard(d);
-		});
-		output += '</div>';
-	}
-
-	if (posts.length !== 0) {
-		output += '<h2 class="mt-4">Posts</h2>';
-		output += '<div class="row">';
-		posts.map(d => {
-			output += generatePostCard(d);
-		});
-		output += '</div>';
-	}
-
-	// Update UI to show number of results	
-	resultsCountEl.innerHTML = "";
-	resultsCountEl.innerHTML = `<div class="results-count rounded py-2 px-3">Showing ${resultsCount.toString()} results for the search term <span class="results-count__term">${searchTerm}</span></div> `;
-
-	// Update UI to show results
-	resultsContainer.innerHTML = "";
-	resultsContainer.innerHTML = output;
-};
-
-async function initSearch() {
-	const searchInput = document.getElementById('searchInput');
-
-	const placeholder = `<div class="col-12 col-md-4 mt-4"> <div class="search-result-placeholder"><span class="placeholder-circle circle-rounded"></span></div></div> `;
-
-	if (searchInput.value.trim() !== '') {
-
-		resultsContainer.innerHTML = `<div class="results-count rounded" style="height: 50px;"></div><div class="row">${placeholder.repeat(6)}</div>`;
-
-		try {
-			await displayResults(searchInput.value);
-			// await updateInterface();
-		} catch (error) {
-			console.error(error);
-		}
-
+	if (searchTerm) {
+		displayResults(searchTerm, activeFilter, currentPage);
 	} else {
-
-		resultsCountEl.innerHTML = "";
-		resultsCountEl.innerHTML = `<div class="results-count rounded py-2 px-3">No results found, please enter something into the sarch field.</div>`;
-		resultsContainer.innerHTML = "";
+		resultsCountEl.innerHTML = `<div class="results-count rounded py-2 px-3">No results found, please enter something into the search field.</div>`;
+		spinner.style.display = 'none';
 	}
-};
-
-document.addEventListener('DOMContentLoaded', initSearch);
+});

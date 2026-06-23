@@ -52,15 +52,23 @@ function themebs_enqueue_scripts() {
   }
 
   // Search JS
-  // if (is_search()) {
-  //   wp_enqueue_script('custom-search', get_template_directory_uri() . '/assets/js/search.js', [], '1.75', true);
+  if (is_search()) {
+    wp_enqueue_script('custom-search', get_template_directory_uri() . '/assets/js/search.js', [], '1.75', true);
   
-  //   // Pass the WordPress REST API base URL to your JavaScript
-  //   wp_localize_script('custom-search', 'wpApiSettings', array(
-  //       'root' => esc_url_raw(rest_url()),
-  //       'nonce' => wp_create_nonce('wp_rest'),
-  //   ));
-  // }
+    // Pass the WordPress REST API base URL to your JavaScript
+    wp_localize_script('custom-search', 'wpApiSettings', array(
+        'root' => esc_url_raw(rest_url()),
+        'nonce' => wp_create_nonce('wp_rest'),
+    ));
+  };
+
+  // Platform Results JS
+  if (is_page() && get_post_field('post_name', get_the_ID()) === 'results') {
+    wp_enqueue_script('platform-results', get_template_directory_uri() . '/assets/js/platform-results.js', [], '1.0', true);
+    wp_localize_script('platform-results', 'platformResultsData', array(
+      'root' => esc_url_raw(rest_url()),
+    ));
+  }
 
   // Combine your SVG icons and generalized data
   wp_localize_script('tps-index', 'wpData', [

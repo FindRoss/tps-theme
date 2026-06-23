@@ -43,6 +43,7 @@ $total_posts = $query->found_posts;
           <?php echo get_svg_icon('chevron-left'); ?>
         </button>
         <span class="noselect flex-grow-1" id="table-page-count">1 of <?php echo ceil($total_posts / 10); ?></span>
+
         <button class="btn tps-btn tps-btn-outline" id="table-page-next" aria-label="next page">
           <?php echo get_svg_icon('chevron-right'); ?>
         </button>
