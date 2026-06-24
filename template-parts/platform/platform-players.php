@@ -76,14 +76,32 @@ $total_results = $wpdb->get_var($wpdb->prepare(
   <table class="table hcl-results-page-table table-results" id="player-results" data-total-results="<?php echo $total_results; ?>">
     <thead>
       <tr>
-        <th>
-          <div><span>Player</span></div>
+        <th data-tablecol="player_name" data-coldir="ASC" class="th-control">
+          <div>
+            <span>Player</span>
+            <span class="table-col-icon" style="display: none;">
+              <span class="table-col-icon-box"><?php echo $iconUp; ?></span>
+              <span class="table-col-icon-box"><?php echo $iconDown; ?></span>
+            </span>
+          </div>
         </th>
-        <th>
-          <div><span>Appearances</span></div>
+        <th data-tablecol="appearances" data-coldir="DESC" class="th-control">
+          <div>
+            <span>Appearances</span>
+            <span class="table-col-icon" style="display: none;">
+              <span class="table-col-icon-box"><?php echo $iconUp; ?></span>
+              <span class="table-col-icon-box"><?php echo $iconDown; ?></span>
+            </span>
+          </div>
         </th>
-        <th>
-          <div><span>Profit/Loss</span></div>
+        <th data-tablecol="total_winnings" data-coldir="DESC" class="th-control">
+          <div>
+            <span>Profit/Loss</span>
+            <span class="table-col-icon" style="display: none;">
+              <span class="table-col-icon-box"><?php echo $iconUp; ?></span>
+              <span class="table-col-icon-box"><?php echo $iconDown; ?></span>
+            </span>
+          </div>
         </th>
       </tr>
     </thead>

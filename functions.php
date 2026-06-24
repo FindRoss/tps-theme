@@ -62,10 +62,21 @@ function themebs_enqueue_scripts() {
     ));
   };
 
+  // Table handler utility (used by both results and players)
+  wp_enqueue_script('table-handler', get_template_directory_uri() . '/assets/js/table-handler.js', [], '1.0', true);
+
   // Platform Results JS
   if (is_page() && get_post_field('post_name', get_the_ID()) === 'results') {
-    wp_enqueue_script('platform-results', get_template_directory_uri() . '/assets/js/platform-results.js', [], '1.0', true);
+    wp_enqueue_script('platform-results', get_template_directory_uri() . '/assets/js/platform-results.js', ['table-handler'], '1.0', true);
     wp_localize_script('platform-results', 'platformResultsData', array(
+      'root' => esc_url_raw(rest_url()),
+    ));
+  }
+
+  // Platform Players JS
+  if (is_page() && get_post_field('post_name', get_the_ID()) === 'players') {
+    wp_enqueue_script('platform-players', get_template_directory_uri() . '/assets/js/platform-players.js', ['table-handler'], '1.0', true);
+    wp_localize_script('platform-players', 'platformPlayersData', array(
       'root' => esc_url_raw(rest_url()),
     ));
   }

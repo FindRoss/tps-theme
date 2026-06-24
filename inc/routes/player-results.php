@@ -15,7 +15,9 @@ function get_player_results_by_streams_term($data) {
     $term = isset($_GET['term']) ? intval($_GET['term']) : 0;
     $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
     $rows = isset($_GET['rows']) ? intval($_GET['rows']) : 10; // default 10 per page
-    $search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : ''; 
+    $search = isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '';
+    $sort = isset($_GET['sort']) ? sanitize_text_field($_GET['sort']) : 'appearances';
+    $dir = isset($_GET['dir']) && strtoupper($_GET['dir']) === 'ASC' ? 'ASC' : 'DESC'; 
 
     // Calculate offset for pagination
     $offset = ($page - 1) * $rows;
@@ -43,7 +45,7 @@ function get_player_results_by_streams_term($data) {
         $results_query .= " AND player_name LIKE %s";
     }
     $results_query .= " GROUP BY player_id, player_name
-                        ORDER BY appearances DESC
+                        ORDER BY " . sanitize_sql_orderby($sort . ' ' . $dir) . "
                         LIMIT %d OFFSET %d";
 
     if (!empty($search)) {
