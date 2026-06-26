@@ -41,8 +41,8 @@ $used_articles = array();
 
         <!-- Sidebar -->
         <div class="col-12 col-lg-4">
-          <a href="https://www.badbeatclothing.com/" target="_blank" rel="sponsored" class="ad-link">
-            <img src="https://toppokerstreamers.com/wp-content/uploads/2024/11/badbeat-clothing-tps-ad__300x300-jpg.avif" class="rounded ad-img w-100 h-auto" alt="badbeat clothing advert"/>
+          <a href="https://go.wpnaffiliates.com/visit/?bta=236787&brand=americascardroom&afp=tps" target="_blank" rel="sponsored" class="ad-link">
+            <img src="https://toppokerstreamers.com/wp-content/uploads/2026/06/ACR_Poker_Welcome_Bonus_Banner_300_x_300.avif" class="rounded ad-img w-100 h-auto" alt="ACR Poker welcome bonus banner"/>
           </a>
         </div>
      
