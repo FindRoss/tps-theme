@@ -39,16 +39,17 @@ function themebs_enqueue_scripts() {
     $posts = get_posts($args);
 
     // Pass the WordPress REST API base URL to your JavaScript
-    wp_localize_script('player-script', 'wpApiSettings', array(
+    $localize_data = array(
         'root'    => esc_url_raw(rest_url()),
         'post_id' => $post_id,
         'posts'   => $posts,
-        'apps'    => profile_stream_apps(),
-        61        => profile_stream_apps(61),
-        91        => profile_stream_apps(91),
-        121       => profile_stream_apps(121),
-        79        => profile_stream_apps(79)
-    ));
+    );
+
+    foreach (get_player_stream_terms($post_id) as $stream) {
+      $localize_data[$stream['id']] = profile_stream_apps($stream['id']);
+    }
+
+    wp_localize_script('player-script', 'wpApiSettings', $localize_data);
   }
 
   // Search JS
@@ -166,6 +167,10 @@ require get_theme_file_path('/inc/routes/player-results.php');
  */
 require get_theme_file_path('/assets/svg-icons.php');
 
+/**
+ * tps_sync_player_cashgame_results + tps_delete_player_cashgame_results
+ */
+require get_theme_file_path('/inc/player-cashgame-sync.php');
 
 /**
  * Add support for excerpts on Pages

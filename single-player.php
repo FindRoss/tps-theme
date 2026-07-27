@@ -154,30 +154,9 @@
       <?php endwhile; ?>
     <?php endif; ?>
 
-    <?php $streams = array( 
-        array(
-          'heading'   => 'Hustler Casino Live Results',
-          'post_type' => 'hcl_stream',
-          'id'        => 61
-        ),
-        array(
-          'heading'   => 'Bally Live Poker Results', 
-          'post_type' => 'bally_stream',
-          'id'        => 91
-        ),
-        array(
-          'heading'   => 'Champions Poker Live Results', 
-          'post_type' => 'cpl_stream',
-          'id'        => 121
-        ),
-        array(
-          'heading'   => 'Poker at the Lodge Results', 
-          'post_type' => 'poker_lodge_stream', 
-          'id'        => 79
-        )
-      );
+    <?php $player_streams = get_player_stream_terms(get_the_ID());
 
-      foreach ($streams as $stream) {
+      foreach ($player_streams as $stream) {
         $apps = profile_stream_apps($stream['id']); 
 
         if (!empty($apps)) : ?>
