@@ -1,4 +1,6 @@
-<?php function displayPlayerStreamResults($apps, $term_id) { ?>
+<?php 
+
+function displayPlayerStreamResults($apps, $term_id) { ?>
   <div class="row">
     <div class="col-12 col-lg-8">
 
