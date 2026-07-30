@@ -1,0 +1,396 @@
+@use 'mixins' as *;
+
+/* Table Striped */
+.tps-table-striped {
+  width: 100%;
+}
+
+.tps-table-striped tr {
+  display: flex;
+  border-radius: var(--tps-border-radius);
+  padding: var(--size-400);
+}
+
+.tps-table-striped tr:nth-child(odd) {
+  background: var(--tps-bg-secondary-color);
+}
+
+.tps-table-striped td {
+  flex-basis: 50%;
+  background-color: transparent;
+}
+
+.tps-table-striped td:nth-child(2) {
+  font-weight: bold;
+}
+
+/* Table Results */
+.tps-table-results {
+  width: 100%;
+  background: var(--tps-bg-secondary-color);
+  border-radius: var(--tps-border-radius);
+
+  tr {
+    border-bottom: 1px solid var(--tps-border-color);
+
+    &:last-child {
+      border-color: transparent;
+    }
+  }
+
+  td {
+      color: var(--tps-text-color);
+      font-weight: 600;
+      font-size: var(--size-400);
+      padding: var(--size-400) var(--size-200);
+      
+
+      img {
+          border: 2px solid var(--tps-link-color);
+          width: 50px;
+          height: 50px;
+          margin-right: 0.35rem;
+      }
+    }
+}
+
+
+.tps-table-results td.tps-table-results__position {
+  width: 1ch;
+  font-weight: 400;
+}
+
+.tps-table-results__player-link {
+  display: flex;
+  align-items: center;
+}
+
+.tps-table-results__player-link:hover img,
+.tps-table-results__player-link:active img {
+  border-color: var(--tps-link-active-color);
+  /* border-color: yellow; */
+}
+
+@media screen and (min-width: 768px) {
+  .tps-table-results td {
+    padding: var(--size-400);
+  }
+
+  .tps-table-results td img {
+    width: 75px;
+    height: 75px;
+    margin-right: 0.5rem;
+  }
+}
+
+/* PLACEHODLER */
+.placeholder-card {
+  background-color: var(--tps-bg-color);
+}
+
+
+.tps-select {
+  outline: 3px solid transparent;
+
+  &:active,
+  &:focus {
+      outline: 3px solid var(--tps-outline-color);
+  }
+}
+
+select#rows-per-page {
+  background: var(--tps-bg-color);
+  color: var(--tps-text-color);
+  border: 1px solid var(--tps-border-color);
+  padding: 11px 0 11px 11px;
+  font-size: 1rem;
+  border-radius: var(--tps-border-radius);
+  width: 100%;
+}
+
+#navbarPlatform ul.navbar-nav {
+  padding-top: var(--size-300);
+  padding-bottom: var(--size-300);
+}
+
+#navbarPlatform li.nav-item:not(:first-child) {
+  margin-top: var(--size-200);
+}
+
+@media screen and (min-width: 992px) {
+  #navbarPlatform ul.navbar-nav {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  #navbarPlatform li.nav-item:not(:first-child) {
+    margin-top: 0px;
+  }
+}
+
+.hcl-nav-input-group {
+  justify-content: center;
+
+  button {
+    flex-basis: 50%;
+    border: 1px solid var(--tps-border-color);
+
+    &:hover {
+      color: inherit;
+    }
+  }
+
+  button.active {
+    background: var(--tps-primary-color);
+    color: #FFFFFF;
+  }
+}
+
+.hcl-results-form-controls {
+  margin-top: var(--size-200);
+}
+
+.tps-input-group {
+  background: var(--tps-bg-secondary-color);
+  border: 1px solid var(--tps-border-color);
+  padding: var(--size-100);
+  border-radius: var(--tps-border-radius);
+  font-size: 0.8rem;
+  flex-basis: 49.5%;
+  justify-content: center;
+}
+
+.tps-input-group svg {
+  fill: var(--tps-text-color);
+}
+
+#hcl-search-player {
+  flex-basis: 100%;
+
+  input {
+      background: var(--tps-bg-color);
+      color: var(--tps-text-color);
+      border: 1px solid var(--tps-border-color);
+      padding: 8.5px;
+      font-size: 1rem;
+      border-radius: var(--tps-border-radius);
+      width: 100%;
+    }
+}
+
+.tps-table-number-input {
+  button {
+    border: 1px solid var(--tps-border-color);
+    background: var(--tps-bg-color);
+
+    &:disabled {
+      background: transparent;
+
+      svg {
+        fill: var(--tps-text-muted-color)
+      }
+    }
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+
+
+@media screen and (min-width: 992px) {
+  .tps-input-group {
+    flex-basis: auto;
+    background: var(--tps-bg-secondary-color);
+    border: 1px solid var(--tps-border-color);
+    border-radius: var(--tps-border-radius);
+    font-size: 1rem;
+    flex-grow: 0;
+  }
+
+  #hcl-search-player {
+    flex-basis: 40%;
+  }
+
+  .hcl-nav-input-group button {
+    flex-basis: auto;
+  }
+}
+
+.details-box {
+  background-color: var(--tps-bg-secondary-color);
+}
+
+.results-table {
+  color: var(--tps-text-color);
+}
+
+
+
+.player-hcl-results th[data-tablecol] {
+  cursor: pointer;
+}
+
+.table-col-icon {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-col-icon-box {
+  height: 0.4rem;
+}
+
+.table-col-icon-box svg {
+  fill: var(--tps-text-muted-color);
+  stroke: var(--tps-text-muted-color);
+  vertical-align: inherit;
+}
+
+
+// ICONS CONTROL TODO
+.hcl-results-page-table th.active[data-coldir="ASC"] .table-col-icon-box:nth-child(1) svg,
+.hcl-results-page-table th.active[data-coldir="DESC"] .table-col-icon-box:nth-child(2) svg {
+  fill: var(--tps-heading-color);
+  stroke: var(--tps-heading-color);
+}
+
+.hcl-results-page-table .th-control {
+  @include disable-text-selection;
+}
+
+.player-hcl-results {
+  padding: 0px;
+  box-shadow: var(--tps-box-shadow);
+  border-radius: var(--tps-border-radius);
+  border: 1px solid var(--tps-border-color);
+  background: var(--tps-bg-secondary-color);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+@media screen and (min-width: 992px) {
+  .player-hcl-results {
+    padding: var(--size-200);
+  }
+}
+
+.player-hcl-results table {
+  color: var(--tps-text-color);
+}
+
+.player-hcl-results table td {
+  font-size: 1rem;
+  min-width: 100px;
+  vertical-align: middle;
+}
+
+.player-hcl-results .hcl-title-link {
+  font-size: 0.8rem;
+}
+
+@media screen and (min-width: 992px) {
+  .player-hcl-results .hcl-title-link {
+    font-size: 1rem;
+  }
+}
+
+.player-hcl-results table thead {
+  border-bottom: 1px solid var(--tps-border-color);
+}
+
+.player-hcl-results table th {
+  font-size: 0.8rem;
+}
+
+.player-hcl-results table th>div {
+  display: flex;
+  gap: 5px;
+}
+
+@media screen and (min-width: 992px) {
+  .player-hcl-results table td {
+    font-size: 1rem;
+  }
+
+  .player-hcl-results table th {
+    font-size: 1.2rem;
+  }
+}
+
+.results-table td,
+.results-table th {
+  border-color: var(--tps-border-color);
+}
+
+.player-hcl-results table td {
+  border-color: var(--tps-border-color);
+}
+
+.player-hcl-results table td {
+  /* text-align: end; */
+  text-align: start;
+}
+
+.player-hcl-results table td img {
+  object-fit: cover;
+  border-radius: var(--tps-border-radius);
+  width: 40px;
+  height: 40px;
+}
+
+@media screen and (min-width: 992px) {
+  .player-hcl-results table td img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.player-hcl-results table td .text-danger {
+  margin-left: -0.6ch;
+}
+
+
+.player-hcl-results table td:first-child {
+  color: var(--tps-heading-color);
+}
+
+.player-hcl-results table td a {
+  color: var(--tps-link-color);
+}
+
+.player-hcl-results table tr {
+  margin-top: var(--size-300);
+  padding: var(--size-300);
+}
+
+.player-hcl-results table tr:last-child td,
+.player-hcl-results tr:last-child th {
+  border: 0px;
+}
+
+@media screen and (min-width: 992px) {
+  .player-hcl-results .hcl-results-page-table {
+    table-layout: fixed;
+  }
+}
+
+
+
+// Theme-aware baseline for any plain HTML table (Bootstrap's .table etc.
+// don't set colors that adapt to light/dark mode). More specific table
+// styles elsewhere in this file (e.g. .tps-table-results, .player-hcl-results
+// table) still win via specificity, so this only affects untouched tables.
+table {
+  background-color: var(--tps-bg-color);
+  color: var(--tps-text-color);
+
+  th,
+  td {
+    color: var(--tps-text-color);
+    background-color: var(--tps-bg-color);
+    border-color: var(--tps-border-color);
+  }
+}
