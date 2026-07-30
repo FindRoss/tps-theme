@@ -127,14 +127,24 @@ require get_theme_file_path('/inc/bbc-card.php');
 require get_theme_file_path('/inc/custom-queries.php');
 
 /**
- * Profile stream apps
+ * get_player_cashgame_results()
  */
-require get_theme_file_path('/inc/profile-stream-apps.php');
+require get_theme_file_path('/inc/get-player-cashgame-results.php');
+
+/**
+ * get_player_event_results()
+ */
+require get_theme_file_path('/inc/get-player-event-results.php');
 
 /**
  * Player Stream Results
  */
-require get_theme_file_path('/inc/display-player-stream-results.php');
+require get_theme_file_path('/inc/display-player-cashgame-results.php');
+
+/**
+ * Player Event Results
+ */
+require get_theme_file_path('/inc/display-player-event-results.php');
 
 /**
  * Streamed Games List
@@ -170,6 +180,11 @@ require get_theme_file_path('/assets/svg-icons.php');
  * tps_sync_player_cashgame_results + tps_delete_player_cashgame_results
  */
 require get_theme_file_path('/inc/player-cashgame-sync.php');
+
+/**
+ * tps_sync_player_event_results + tps_delete_player_event_results
+ */
+require get_theme_file_path('/inc/player-event-sync.php');
 
 /**
  * Add support for excerpts on Pages

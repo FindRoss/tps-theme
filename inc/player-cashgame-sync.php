@@ -36,6 +36,11 @@ function tps_sync_player_cashgame_results($post_id, $post) {
       the_row();
 
       $player_id = get_sub_field('player_link');
+
+      if (!$player_id) {
+        continue;
+      }
+
       $player_name = get_field('name', $player_id);
       $player_image = !empty(get_the_post_thumbnail_url($player_id, 'thumbnail'))
         ? get_the_post_thumbnail_url($player_id, 'thumbnail')
