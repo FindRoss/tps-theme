@@ -109,16 +109,6 @@ async function fetchPosts() {
   loadMoreBtn.disabled = false;
 }
 
-async function checkForMoreHCLApps() {
-  try {
-    const response = await fetch(`${wpApiSettings.root}custom/v1/hcl-apps/`);
-    const data = await response.json();
-    console.log(data);
-  } catch (err) {
-    console.error(err)
-  }
-};
-
 function newPaintAppRows(event, termID) {
 
   let trimmedApps = wpApiSettings[termID].slice(8);

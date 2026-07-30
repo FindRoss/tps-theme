@@ -23,7 +23,6 @@ function themeMode() {
 
 function init() {
   themeMode();
-  // carouselControl();
 }
 document.addEventListener('DOMContentLoaded', init);
 

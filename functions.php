@@ -116,7 +116,6 @@ require get_theme_file_path('/inc/acf-post-object-search-filter.php');
  */
 require get_theme_file_path('/inc/section-heading.php');
 
-
 /**
  * Function to create a section heading
  */
@@ -180,7 +179,6 @@ function my_add_excerpts_to_pages() {
     add_post_type_support('page', 'excerpt');
 }
 
-
 /**
  * Serve children of platform page the correct template file. 
  */
@@ -211,12 +209,10 @@ function platform_page_template($template) {
   return $template;
 };
 
-
 // Stop linking my media file wordpress!
 add_action( 'after_setup_theme', function() {
   update_option( 'image_default_link_type', 'none' );
 });
-
 
 add_action( 'after_setup_theme', 'register_navwalker' );
 function register_navwalker(){
@@ -399,269 +395,6 @@ function findImg($term_id) {
     };
   };
 
-
-// Single-player.php 
-// Check for players who have featued on HCL Streams
-
-//// SEARCH
-// Search endpoint fetch
-function custom_hcl_apps_endpoint() {
-  register_rest_route('custom/v1', '/hcl-apps/', array(
-      'methods'  => 'GET',
-      'callback' => 'profile_stream_apps',
-  ));
-}
-add_action('rest_api_init', 'custom_hcl_apps_endpoint');
-
-
-function get_hcl_results_by_episode($postType = 'hcl_stream') {
-  $results = array();
-  $hcl_args = array(
-    'post_type'      => $postType,
-    'posts_per_page' => -1,
-    'meta_key'       => 'episode', 
-    'orderby'        => 'meta_value_num',
-    'order'          => 'DESC',
-  );
-
-  $hcl_query = new WP_Query($hcl_args);
-
-  if ($hcl_query->have_posts()) : 
-    while ($hcl_query->have_posts()) : $hcl_query->the_post();       
-       
-        // Add the item to the array
-        $results[] = array(
-          'link'        => get_the_permalink(),
-          'episode'     => intval(get_field('episode')),
-          'date'        => get_field('date'),
-          'type'        => get_field('game_type'),
-          'stakes'      => get_field('stakes_played'),
-          'youtube_vid' => get_field('youtube_stream')
-        );
-
-     endwhile; 
-     wp_reset_postdata(); 
-    endif; 
-
-  return $results;
-};
-
-function get_hcl_results_by_player($postType = 'hcl_stream') {
-  $results = array(); // Initialize $results as an indexed array
-  $hcl_args = array(
-    'post_type'      => $postType,
-    'posts_per_page' => -1,
-    'meta_key'       => 'episode', // The ACF field name
-    'orderby'        => 'meta_value_num', // Specify that the meta value should be treated as a number
-    'order'          => 'DESC', // or 'DESC' depending on your sorting preference
-  );
-
-  $hcl_query = new WP_Query($hcl_args);
-
-  if ($hcl_query->have_posts()) : 
-    while ($hcl_query->have_posts()) : $hcl_query->the_post();       
-      $hcl_results = get_field('results');
- 
-      foreach ($hcl_results as $r) {
-
-        $player = $r['player_link'];
-        $winnings = $r['tournament_winnings'];
-        $winnings_int = (int)$winnings;
-
-        // Check if the item already exists in the array
-        $found = false;
-        foreach ($results as $result) {
-          if ($result['id'] === $player) {
-            $found = true;
-            break;
-          }
-        }
-
-        // If not found, add the player to the array
-        if (!$found) {
-          $results[] = array(
-            'id'          => $player,
-            'title'       => get_the_title($player),
-            'link'        => get_the_permalink($player),
-            'thumbnail'   => get_the_post_thumbnail_url($player, 'thumbnail'),
-            'winnings'    => 0, 
-            'appearances' => 0 
-          );
-        }
-
-        // Add all winnings to players
-        $key = array_search($player, array_column($results, 'id'));
-        $results[$key]['winnings'] += $winnings_int;
-
-        // Increment appearance count for the player
-        $results[$key]['appearances']++;
-      }; 
-
-    endwhile; 
-    wp_reset_postdata(); 
-  endif; 
-
-  return $results;
-};
-
-// Get profile_type terms
-function get_profiles_by_taxonomy($tax, $num_posts) {
-  $collection = array();
-  $used_posts = array();
-
-  // Profile_type terms
-  $profile_type_terms = get_terms(array(
-      'taxonomy'   => $tax,
-      'orderby'    => 'count',
-      'order'      => 'DESC',
-      'hide_empty' => true,
-    )
-  );
-
-  foreach($profile_type_terms as $term) {
-
-    $term_id = $term->term_id;
-    // Get profiles
-    $args = array(
-      'post_type'      => 'player',
-      'posts_per_page' => $num_posts,
-      'post__not_in'   => $used_posts,
-      'orderby'        => 'post_views',
-      'order'          => 'DESC',
-      'tax_query'      => array(
-        array(
-            'taxonomy' => $tax, 
-            'field'    => 'term_id',
-            'terms'    => $term_id,
-        ),
-      ),
-    );
-
-    $posts = new WP_Query($args);
-
-    // Check if there are posts
-    if ($posts->have_posts()) {
-      while ($posts->have_posts()) {
-          $posts->the_post();
-          // Add post ID to used_posts array
-          $used_posts[] = get_the_ID();
-      }
-    // Reset post data
-    wp_reset_postdata();
-    }
-
-    $collection[$term_id] = array(
-      'title'       => $term->name,
-      'description' => $term->description,
-      'permalink'   => get_term_link($term_id, $tax),
-      'profiles'    => $posts,
-    );
-  };
-
-  return $collection;
-};
-
-function cut_off_after_three_paragraphs($content) {
-  // Split the content into paragraphs
-  $paragraphs = explode("\n", $content);
-
-  // Take the first three paragraphs
-  $cut_off_content = array_slice($paragraphs, 0, 3);
-
-  // Join paragraphs back into text for the first part
-  $text_set1 = implode("\n", $paragraphs);
-
-  // Join paragraphs back into text for the second part
-  $text_set2 = implode("\n", $cut_off_content);
-
-  // Return an array with two sets of text
-  return array($text_set1, $text_set2);
-};
-
-
-// Carousel
- function carousel_card($card_title, $card_link, $card_img) { 
-
-  $output = '<div class="player-col player-col-4 mt-2">';
-  $output .= '<div class="h-100">';
-  $output .= '<a class="tps-card-link" href="' . esc_url($card_link) . '">';
-  $output .= '<div class="tps-card p-2 p-lg-3 rounded h-100">';
-  $output .= '<div class="tps-card__media d-flex justify-content-center">';
-  $output .= '<img src="' . esc_url($card_img) . '" alt="' . esc_html($card_title) . '" class="rounded-circle" width="100" height="100">';
-  $output .= '</div>';
-  $output .= '<div class="pt-3">';
-  $output .= '<h3 class="h6 text-center tps-card__title m-0 text-break">' . esc_html($card_title) . '</h3>';
-  $output .= '</div>';
-  $output .= '</div>';
-  $output .= '</a>';
-  $output .= '</div>';
-  $output .= '</div>';
-
-  return $output;
-}; 
-
-
-function carousel($arguments) { 
-  $inner_carousel = '';
-  $output = '';
-
-  $inputQuery = new WP_Query($arguments);
-  $posts = $inputQuery->posts;
-  $post_count = $inputQuery->post_count; 
-  $uuid = wp_generate_uuid4(); 
-
-  $svgNext = '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>';
-  $svgPrev = '<svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>';
-  
-  $panel_arrays = array_chunk($posts, 4);
-
-  foreach ($panel_arrays as $index => $chucked) {
-    
-
-    $inner_carousel .= '<div class="carousel-item' . ($index == 0 ? ' active' : '') . '">';
-    $inner_carousel .= '<div class="player-row flex-wrap-reverse gap-2">';
-
-    foreach ($chucked as $card) {
-      
-      $title = $card->post_title;
-      $permalink = get_the_permalink($card->ID);
-      $thumbnail = get_the_post_thumbnail_url($card->ID, 'thumbnail');
-      $inner_carousel .= carousel_card($title, $permalink, $thumbnail);
-    };
-
-    $inner_carousel .= '</div>';
-    $inner_carousel .= '</div>';
-  }
-
-  ?>
-
-  <?php
-  $output .= '<div id="carousel-' . $uuid . '" class="carousel slide tps-card-carousel">';
-  $output .= '  <div class="carousel-indicators tps-card-carousel__indicators">';
-  $output .= '    <button type="button" data-bs-target="#carousel-' . $uuid . '" data-bs-slide-to="0" class="indicator active" aria-current="true" aria-label="Slide 1"></button>';
-  $output .= '    <button type="button" data-bs-target="#carousel-' . $uuid . '" data-bs-slide-to="1" class="indicator" aria-label="Slide 2"></button>';
-  $output .= '    <button type="button" data-bs-target="#carousel-' . $uuid . '" data-bs-slide-to="2" class="indicator" aria-label="Slide 3"></button>';
-  $output .= '  </div>';
-
-  $output .= '  <div class="carousel-inner">';
-  $output .= '    ' . $inner_carousel;
-  $output .= '  </div>';
-
-  $output .= '  <button class="carousel-control-prev  tps-carousel-control d-none" type="button" data-bs-target="#carousel-' . $uuid . '" data-bs-slide="prev">';
-  $output .= '    <span class="tps-carousel__arrow" aria-hidden="true">'. $svgPrev . '</span>';
-  $output .= '    <span class="visually-hidden">Previous</span>';
-  $output .= '  </button>';
-
-  $output .= '  <button class="carousel-control-next tps-carousel-control" type="button" data-bs-target="#carousel-' . $uuid . '" data-bs-slide="next">';
-  $output .= '    <span class="tps-carousel__arrow" aria-hidden="true">'. $svgNext . '</span>';
-  $output .= '    <span class="visually-hidden">Next</span>';
-  $output .= '  </button>';
-  $output .= '</div>';
-
-  echo $output;
-
-}; 
-
 /**
  * Transform numbers so 1 becomes 1st, 2 becomes 2nd
  * 
@@ -701,39 +434,3 @@ function formatTableDate($date) {
     }
   }
 }; 
-
-
-// Temp
-
-// function update_player_appearance_count($post_id) {
-//     // Check if this is a 'cash_game' post
-//     if (get_post_type($post_id) !== 'cash_game') {
-//         return;
-//     }
-
-//     // Get all players in the repeater field for this cash game
-//     if (have_rows('results', $post_id)) {
-//         $player_counts = array();
-        
-//         // Loop through each player in the repeater
-//         while (have_rows('results', $post_id)) {
-//             the_row();
-//             $player_id = get_sub_field('player_link');
-
-//             if ($player_id) {
-//                 // Track player appearances in an array
-//                 if (!isset($player_counts[$player_id])) {
-//                     $player_counts[$player_id] = 1;
-//                 } else {
-//                     $player_counts[$player_id]++;
-//                 }
-//             }
-//         }
-
-//         // Update each player's appearance count
-//         foreach ($player_counts as $player_id => $count) {
-//             update_post_meta($player_id, 'appearance_count', $count);
-//         }
-//     }
-// }
-// add_action('save_post_cash_game', 'update_player_appearance_count');
