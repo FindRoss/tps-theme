@@ -2,8 +2,6 @@
 
 add_action('save_post', 'tps_sync_player_cashgame_results', 10, 2);
 function tps_sync_player_cashgame_results($post_id, $post) {
-  error_log('tps_sync_player_cashgame_results ran for post ' . $post_id);
-
   if ($post->post_type !== 'cash_game') {
     return;
   }
