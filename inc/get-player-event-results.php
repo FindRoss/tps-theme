@@ -1,6 +1,13 @@
 <?php 
 
 function get_player_event_results($player_id, $event_post_type) {
+  static $cache = array();
+  $cache_key = $player_id . '_' . $event_post_type;
+
+  if (array_key_exists($cache_key, $cache)) {
+    return $cache[$cache_key];
+  }
+
   global $wpdb;
   $table = $wpdb->prefix . 'player_event_results';
 
@@ -17,7 +24,7 @@ function get_player_event_results($player_id, $event_post_type) {
     ARRAY_A
   );
 
-  if (empty($rows)) return array();
+  if (empty($rows)) return $cache[$cache_key] = array();
 
   $apps = array();
   foreach ($rows as $row) {
@@ -40,5 +47,40 @@ function get_player_event_results($player_id, $event_post_type) {
       'date'                => $date,
     );
   }
-  return $apps;
+  return $cache[$cache_key] = $apps;
+}
+
+function get_player_event_types($player_id) {
+  global $wpdb;
+  $table = $wpdb->prefix . 'player_event_results';
+
+  $post_types = $wpdb->get_col(
+    $wpdb->prepare("SELECT DISTINCT event_post_type FROM {$table} WHERE player_id = %d", $player_id)
+  );
+
+  if (empty($post_types)) return array();
+
+  $events = array();
+  foreach ($post_types as $post_type) {
+    $events[] = array(
+      'heading'   => tps_get_event_heading_for_post_type($post_type),
+      'post_type' => $post_type,
+    );
+  }
+
+  usort($events, function($a, $b) {
+    return strcasecmp($a['heading'], $b['heading']);
+  });
+
+  return $events;
+}
+
+function tps_get_event_heading_for_post_type($post_type) {
+  $map = array(
+    'triton_event'     => 'Triton Results',
+    'pokergo_event'    => 'PokerGO Results',
+    'wpt_event'        => 'WPT Results',
+    'pokerstars_event' => 'PokerStars Results',
+  );
+  return isset($map[$post_type]) ? $map[$post_type] : ucfirst($post_type) . ' Results';
 }

@@ -13,6 +13,8 @@ let postsToUse = wpApiSettings.posts.map(String);
 let availablePosts = [];
 
 function formatDate(dateStr) {
+  if (!dateStr) return '';
+
   // Split the date string into day, month, and year
   const [day, month, year] = dateStr.split('/');
 

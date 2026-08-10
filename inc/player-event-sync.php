@@ -1,5 +1,9 @@
 <?php
 
+function tps_get_supported_event_post_types() {
+  return array('triton_event', 'pokergo_event', 'pokerstars_event', 'wpt_event');
+}
+
 function tps_get_series_taxonomy_for_post_type($post_type) {
   $map = array(
     'triton_event'     => 'triton_series',
@@ -12,7 +16,7 @@ function tps_get_series_taxonomy_for_post_type($post_type) {
 
 add_action('save_post', 'tps_sync_player_event_results', 10, 2);
 function tps_sync_player_event_results($post_id, $post) {
-  $supported_post_types = array('triton_event');
+  $supported_post_types = array('triton_event', 'pokergo_event', 'pokerstars_event', 'wpt_event');
 
   if (!in_array($post->post_type, $supported_post_types)) {
     return;
@@ -109,4 +113,20 @@ function tps_delete_player_event_results($post_id) {
   global $wpdb;
   $table = $wpdb->prefix . 'player_event_results';
   $wpdb->delete($table, array('event_post_id' => $post_id));
+}
+
+function tps_backfill_player_event_results($post_type) {
+  $posts = get_posts(array(
+    'post_type'      => $post_type,
+    'post_status'    => 'publish',
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+  ));
+
+  foreach ($posts as $post_id) {
+    $post = get_post($post_id);
+    tps_sync_player_event_results($post_id, $post);
+  }
+
+  return count($posts);
 }

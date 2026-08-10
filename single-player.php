@@ -154,8 +154,8 @@
       <?php endwhile; ?>
     <?php endif; ?>
 
+    <!-- Plyer cashgame results -->
     <?php $player_streams = get_player_stream_terms(get_the_ID());
-
       foreach ($player_streams as $stream) {
         $apps = profile_stream_apps($stream['id']); 
 
@@ -170,6 +170,28 @@
         </section>
         <?php endif; 
       } ?>
+
+      <!-- Player event results -->
+      <?php 
+        $player_event_types = get_player_event_types(get_the_ID()); 
+
+        foreach($player_event_types as $event) {
+          $apps = get_player_event_results(get_the_ID(), $event['post_type']); 
+
+          if (!empty($apps)) : ?>
+            
+          <section class="mt-5">
+            <?php generateSectionHeadingHTML(array(
+                'title' => $event['heading']
+              )); 
+      
+            displayPlayerEventResults($apps, $event['post_type']);  ?>
+          </section>
+          
+        <?php endif; 
+
+        } ?>
+      
     
       <!-- Player NEWS -->
       <?php $player_news_query = new WP_Query(array(

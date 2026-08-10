@@ -49,6 +49,10 @@ function themebs_enqueue_scripts() {
       $localize_data[$stream['id']] = profile_stream_apps($stream['id']);
     }
 
+    foreach (get_player_event_types($post_id) as $event) {
+      $localize_data[$event['post_type']] = get_player_event_results($post_id, $event['post_type']);
+    }
+
     wp_localize_script('player-script', 'wpApiSettings', $localize_data);
   }
 
