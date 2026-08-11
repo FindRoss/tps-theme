@@ -4,6 +4,18 @@ function tps_get_supported_event_post_types() {
   return array('triton_event', 'pokergo_event', 'pokerstars_event', 'wpt_event');
 }
 
+add_action('init', function() {
+  if (!current_user_can('manage_options')) return;
+  if (!isset($_GET['run_event_backfill'])) return; 
+
+  foreach (tps_get_supported_event_post_types() as $post_type) {
+    $count = tps_backfill_player_event_results($post_type);
+    echo "{$post_type}: {$count} posts backfilled<br>"; 
+  }
+
+  exit;
+});
+
 function tps_get_series_taxonomy_for_post_type($post_type) {
   $map = array(
     'triton_event'     => 'triton_series',
