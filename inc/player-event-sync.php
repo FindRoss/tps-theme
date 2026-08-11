@@ -8,11 +8,15 @@ add_action('init', function() {
   if (!current_user_can('manage_options')) return;
   if (!isset($_GET['run_event_backfill'])) return; 
 
-  foreach (tps_get_supported_event_post_types() as $post_type) {
-    $count = tps_backfill_player_event_results($post_type);
-    echo "{$post_type}: {$count} posts backfilled<br>"; 
+  $post_type = isset($_GET['post_type']) ? sanitize_text_field($_GET['post_type']) : ''; 
+  
+  if (!in_array($post_type, tps_get_supported_event_post_types())) {
+    echo 'Invalid or missing post_type parameter.';
+    exit; 
   }
 
+  $count = tps_backfill_player_event_results($post_type);
+  echo "{$post_type}: {$count} posts backfilled"; 
   exit;
 });
 
