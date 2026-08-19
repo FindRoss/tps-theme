@@ -121,11 +121,6 @@ require get_theme_file_path('/inc/acf-post-object-search-filter.php');
 require get_theme_file_path('/inc/section-heading.php');
 
 /**
- * Function to create a section heading
- */
-require get_theme_file_path('/inc/bbc-card.php');
-
-/**
  * Adjust the default wordpress queries
  */
 require get_theme_file_path('/inc/custom-queries.php');

@@ -59,61 +59,7 @@ $used_articles = array();
     </div>
   </section>
 
-  <!-- Profile types -->
-  <section class="mt-5">
-    <div class="container-xxl">
-    
-    <?php generateSectionHeadingHTML(array(
-          'title' => 'Profiles',
-          'link' => site_url() . '/profiles/',
-    )); ?>
-              
-      <div class="row">
-        <?php 
-          // https://toppokerstreamers.com/wp-content/uploads/2023/09/Andy-Stacks-poker-jpg.webp
-          $profileCards = array(
-            array (
-              'title' => 'Players',
-              'link'  => site_url() . '/type/players/', 
-              'image' => 'https://toppokerstreamers.com/wp-content/uploads/2023/09/Sashimi-Poker-HCL-1-jpg.webp'
-            ),
-            array(
-              'title' => 'Streamers',
-              'link'  => site_url() . '/type/streamers/',
-              'image' => 'https://toppokerstreamers.com/wp-content/uploads/2023/04/Parker-Tonkaaaap-Talbott-jpg.webp'
-            ),
-            array(
-              'title' => 'Vloggers',
-              'link'  => site_url() . '/type/vloggers/',
-              'image' => 'https://toppokerstreamers.com/wp-content/uploads/2023/04/Ethan-Rampage-Yau-jpg.webp'
-            ),
-            array(
-              'title' => 'Commentators',
-              'link'  => site_url() . '/type/commentators/',
-              'image' => 'https://toppokerstreamers.com/wp-content/uploads/2023/05/Bart-Hanson.png'
-            )
-          );
-          
-          foreach ($profileCards as $card) { ?>
-
-            <div class="col-12 col-sm-6 col-lg-3 mt-3"> 
-              <a class="gyg-card tps-card-link" href="<?php echo $card['link']; ?>">
-                <div class="gyg-card__img-container" style="background-image: url('<?php echo $card['image']; ?>');">
-                  <h3 class="gyg-card__title"><?php echo $card['title']; ?></h3>
-                </div>
-              </a>
-            </div>
-
-          <?php } ?>
-
-
-      </div>
-    </div>
-  </section>
-
-
-
-<!-- NEWS ARTICLES --> 
+<!-- NEWS ARTICLES -->
   <?php $article_query = new WP_Query(array(
     'posts_per_page' => 6, 
     'post__not_in'   => $used_articles, 
@@ -144,26 +90,6 @@ $used_articles = array();
 
   <?php endif; ?>
   <?php wp_reset_postdata();  ?>
-
-<!-- HUSTLER CASINO LIVE RESULTS -->
-<section class="mt-5 overflow-hidden">
-  <div class="container-xxl">
-    
-    <?php generateSectionHeadingHTML(array(
-    'title' => 'Hustler Casino Live'
-    )); ?>
-
-    <?php generateBBCCardHTML(array(
-      'title' => 'Huster Casino Live',
-      'description' => 'Hustler Casino Live is a raw footage, live-stream poker show where some of the biggest names in poker compete alongside regulars and special guests.',
-      'link' => site_url() . '/hustler-casino-live/',
-      'image' => 'https://toppokerstreamers.com/wp-content/uploads/2024/04/hustler-casino-live-scene__800x450-jpg.webp'
-    )); ?>
-
-
-   
-  </div>
-</section>
 
 <!-- Streamed Games --> 
 <section class="mt-5 pb-4">
