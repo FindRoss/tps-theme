@@ -106,27 +106,16 @@
   <section class="mt-4 pb-5">
     <div class="container">
 
-      <?php 
-        
-        // Remove hyphens and convert to Camel Case with spaces
-        $current_post_slug_name = get_post_field('post_name', $current_page_id);
-        $modified_post_slug_name = ucwords(str_replace('-', ' ', $current_post_slug_name));
+      <?php
+        $platform_template_part = tps_get_platform_template_part($current_page_id, $pillar_page_title);
 
-        if ($current_post_slug_name === 'news') {
-          require locate_template('template-parts/platform/platform-news.php');
-        } else if ($current_post_slug_name === 'players' || $current_post_slug_name === 'streamers') {
-          require locate_template('template-parts/platform/platform-players.php');
-        } else if ($current_post_slug_name === 'results') {
-          require locate_template('template-parts/platform/platform-results.php');
-        } else if (($pillar_page_title === 'Triton Poker' && $current_post_slug_name === 'series')) {
-          require locate_template('template-parts/platform/platform-triton-series.php');
-        } else if (!wp_get_post_parent_id($current_page_id)) { 
-          require locate_template('template-parts/platform/platform-overview.php');
+        if ($platform_template_part) {
+          require locate_template($platform_template_part);
         } else {
           echo '<div class="platform-row">';
             the_content();
           echo '</div>';
-        };
+        }
       ?>
     </div>
   </section>
