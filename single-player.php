@@ -154,7 +154,7 @@
       <?php endwhile; ?>
     <?php endif; ?>
 
-    <!-- Plyer cashgame results -->
+    <!-- Player cashgame results -->
     <?php $player_streams = get_player_stream_terms(get_the_ID());
       foreach ($player_streams as $stream) {
         $apps = profile_stream_apps($stream['id']); 

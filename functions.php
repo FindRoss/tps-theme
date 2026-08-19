@@ -18,7 +18,7 @@ function themebs_enqueue_scripts() {
 
   // Single-Player JS
   if (is_singular( 'player' )) {
-    wp_enqueue_script('player-script', get_template_directory_uri() . '/assets/js/player.js', [], '1.7', true);
+    wp_enqueue_script('player-script', get_template_directory_uri() . '/assets/js/player.js', [], '1.8', true);
 
     // Get the current post ID
     $post_id = get_the_ID();

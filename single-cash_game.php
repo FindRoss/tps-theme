@@ -35,7 +35,7 @@
     $details['Date'] = formatTableDate($date);
   }
   if ($youtube_stream) {
-    $details['Watch'] = '<a target="_blank" rel="nofollow" href="' . $youtube_stream . '">Watch ' . get_svg_icon('external-link') . '</a>';
+    // $details['Watch'] = '<a target="_blank" rel="nofollow" href="' . $youtube_stream . '">Watch ' . get_svg_icon('external-link') . '</a>';
   }
 
   $person_profile = 'https://toppokerstreamers.com/wp-content/uploads/2024/08/anonymous-person-profile__100x100-jpg.webp';
@@ -153,7 +153,7 @@
 
 
   <?php if ($youtube_stream) : ?>
-  <script>
+  <!-- <script> 
     const vidWrapper = document.querySelector('#video'); 
 
     function getId(url) {
@@ -171,7 +171,7 @@
         + videoId + '" frameborder="0" allowfullscreen></iframe>';
     
     vidWrapper.innerHTML = iframeMarkup; 
-  </script>
+  </script> -->
   <?php endif; ?>
 
 

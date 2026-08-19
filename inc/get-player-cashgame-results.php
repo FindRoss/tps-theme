@@ -67,7 +67,7 @@ function get_player_stream_terms($player_id) {
     if (!$term || is_wp_error($term)) continue; 
 
     $streams[] = array(
-      'heading' => $term->name . ' Results', 
+      'heading' => $term->name . ' Cash Game Results', 
       'id'      => (int) $term_id,
       'name'    => $term->name, 
     ); 
