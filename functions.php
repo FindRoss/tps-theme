@@ -191,6 +191,11 @@ require get_theme_file_path('/inc/player-cashgame-sync.php');
 require get_theme_file_path('/inc/player-event-sync.php');
 
 /**
+ * tps_get_platform_template_part
+ */
+require get_theme_file_path('/inc/platform-page-router.php');
+
+/**
  * Add support for excerpts on Pages
  */
 add_action('init', 'my_add_excerpts_to_pages');
