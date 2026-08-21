@@ -445,11 +445,11 @@ function formatTableDate($date) {
     // Check if the conversion was successful
     if ($dateTime) {
       $formattedDate = $dateTime->format('j M Y');
-      
+
       return $formattedDate;
     } else {
-      // Handle invalid input date
-      return "Invalid date format";
+      // Unparseable date — blank cell rather than showing raw text to visitors
+      return '';
     }
   }
 }; 

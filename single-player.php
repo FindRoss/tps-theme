@@ -81,55 +81,52 @@
               <table class="profile-table">
                 <tbody class="profile-table__body">
                   <?php foreach($profile_data as $title => $value) {
-                    if($title == "Socials") { ?>
+                    if($title == "Socials") {
+                      $social_links = array();
+                      foreach($socials as $so_title => $so_link) {
+                        $social_links[] = '<a class="profile-table__value-link" href="' . esc_url($so_link) . '" target="_blank" rel="noopener">' . esc_html($so_title) . ' ' . get_svg_icon('external-link') . '</a>';
+                      }
+                      ?>
                       <tr>
-                        <td><?php echo $title; ?></td>
-                        <td>
-                          <?php foreach($socials as $so_title => $so_link) : ?>
-                            <div><a href="<?php echo $so_link; ?>" target="_blank"><?php echo $so_title ?> <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>
-                          <?php endforeach; ?>
-                        </td>
+                        <td><?php echo esc_html($title); ?></td>
+                        <td><?php echo implode(' <span class="profile-table__sep">&middot;</span> ', $social_links); ?></td>
                       </tr>
-                    <?php } else if ($title == "Streams on") { ?>
+                    <?php } else if ($title == "Streams on") {
+                      $stream_links = array();
+                      foreach($value as $stream) {
+                        $main_page = get_field('main_page', $stream);
+                        if (isset($main_page[0])) {
+                          $main_page_permalink = get_the_permalink($main_page[0]);
+                          $stream_links[] = '<a class="profile-table__value-link" href="' . esc_url($main_page_permalink) . '">' . esc_html($stream->name) . '</a>';
+                        } else {
+                          $stream_links[] = esc_html($stream->name);
+                        }
+                      }
+                      ?>
                       <tr>
                         <td>Streams on</td>
-                        <td>
-                          <?php foreach($value as $stream) { ?>
-                            <?php
-                              $main_page = get_field('main_page', $stream);
-
-                              if (isset($main_page[0])) {
-                                $main_page_id = $main_page[0];
-                                $main_page_permalink = get_the_permalink($main_page[0]); ?>
-                                <div><a href="<?php echo $main_page_permalink; ?>"><?php echo $stream->name; ?></a></div>
-                                <?php } else { ?>
-                                <div><?php echo $stream->name; ?></div>
-                              <?php } 
-
-                          }; ?>
-                        </td>
+                        <td><?php echo implode(' <span class="profile-table__sep">&middot;</span> ', $stream_links); ?></td>
                       </tr>
-                    <?php } else if ($title == "Profile type") {  ?>
+                    <?php } else if ($title == "Profile type") {
+                      $type_links = array();
+                      foreach($value as $type) {
+                        $profile_link = get_term_link($type->term_id, 'profile_type');
+                        // Substr below removes the 's' or final character from 'players' and 'streamers'
+                        $profile_term_name = substr($type->name, 0, -1);
+                        if ($type->name == 'Coaches') {
+                          $profile_term_name = 'Coach';
+                        }
+                        $type_links[] = '<a class="profile-table__value-link" href="' . esc_url($profile_link) . '">' . esc_html($profile_term_name) . '</a>';
+                      }
+                      ?>
                       <tr>
                         <td>Type</td>
-                        <td>
-                          <?php foreach($value as $type) { ?>
-                            <?php
-                              $profile_link = get_term_link($type->term_id, 'profile_type');
-                              $profile_term_name = substr($type->name, 0, -1);
-                              if ($type->name == 'Coaches') {
-                                $profile_term_name = 'Coach';
-                              }
-                            ?>
-                            <!-- Use of Substr below removes the 's' or final character from 'players' and 'streamers' -->
-                            <div><a href="<?php echo $profile_link; ?>"><?php echo $profile_term_name; ?></a></div>
-                          <?php }; ?>
-                        </td>
+                        <td><?php echo implode(' <span class="profile-table__sep">&middot;</span> ', $type_links); ?></td>
                       </tr>
                     <?php  } else { ?>
                       <tr>
-                        <td><?php echo $title; ?></td>
-                        <td><?php echo $value; ?></td>
+                        <td><?php echo esc_html($title); ?></td>
+                        <td><?php echo esc_html($value); ?></td>
                       </tr>
                     <?php }
                   } ?>
@@ -155,42 +152,64 @@
     <?php endif; ?>
 
     <!-- Player cashgame results -->
-    <?php $player_streams = get_player_stream_terms(get_the_ID());
+    <?php
+      $player_streams = get_player_stream_terms(get_the_ID());
+      $cashgame_groups = array();
+      $total_cashgame_apps = 0;
+
       foreach ($player_streams as $stream) {
-        $apps = profile_stream_apps($stream['id']); 
+        $apps = profile_stream_apps($stream['id']);
+        if (!empty($apps)) {
+          $cashgame_groups[] = array('stream' => $stream, 'apps' => $apps);
+          $total_cashgame_apps += count($apps);
+        }
+      }
 
-        if (!empty($apps)) : ?>
-
+      if (!empty($cashgame_groups)) : ?>
         <section class="mt-5">
-          <?php generateSectionHeadingHTML(array(
-              'title' => $stream['heading']
-            )); 
-    
-          displayPlayerStreamResults($apps, $stream['id']);  ?>
+          <div class="tps-accordion-heading">
+            <h2 class="tps-accordion-heading__title">Cash game results</h2>
+            <span class="tps-accordion-heading__meta">
+              <?php echo esc_html($total_cashgame_apps); ?> appearances across <?php echo esc_html(count($cashgame_groups)); ?> <?php echo count($cashgame_groups) === 1 ? 'show' : 'shows'; ?>
+            </span>
+          </div>
+          <div class="tps-results-accordion">
+            <?php foreach ($cashgame_groups as $i => $group) :
+              displayPlayerStreamResults($group['apps'], $group['stream']['id'], $i === 0);
+            endforeach; ?>
+          </div>
         </section>
-        <?php endif; 
-      } ?>
+      <?php endif; ?>
 
       <!-- Player event results -->
-      <?php 
-        $player_event_types = get_player_event_types(get_the_ID()); 
+      <?php
+        $player_event_types = get_player_event_types(get_the_ID());
+        $event_groups = array();
+        $total_event_apps = 0;
 
-        foreach($player_event_types as $event) {
-          $apps = get_player_event_results(get_the_ID(), $event['post_type']); 
+        foreach ($player_event_types as $event) {
+          $apps = get_player_event_results(get_the_ID(), $event['post_type']);
+          if (!empty($apps)) {
+            $event_groups[] = array('event' => $event, 'apps' => $apps);
+            $total_event_apps += count($apps);
+          }
+        }
 
-          if (!empty($apps)) : ?>
-            
+        if (!empty($event_groups)) : ?>
           <section class="mt-5">
-            <?php generateSectionHeadingHTML(array(
-                'title' => $event['heading']
-              )); 
-      
-            displayPlayerEventResults($apps, $event['post_type']);  ?>
+            <div class="tps-accordion-heading">
+              <h2 class="tps-accordion-heading__title">Tournament results</h2>
+              <span class="tps-accordion-heading__meta">
+                <?php echo esc_html($total_event_apps); ?> appearances across <?php echo esc_html(count($event_groups)); ?> <?php echo count($event_groups) === 1 ? 'event type' : 'event types'; ?>
+              </span>
+            </div>
+            <div class="tps-results-accordion">
+              <?php foreach ($event_groups as $i => $group) :
+                displayPlayerEventResults($group['apps'], $group['event']['post_type'], $i === 0);
+              endforeach; ?>
+            </div>
           </section>
-          
-        <?php endif; 
-
-        } ?>
+        <?php endif; ?>
       
     
       <!-- Player NEWS -->

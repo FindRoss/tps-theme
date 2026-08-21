@@ -1,4 +1,370 @@
+@use 'breakpoints' as *;
 @use 'mixins' as *;
+
+// Shared "stream list" table: platform overview's Latest Streams table,
+// the front-page and single-cash_game "streamed games" lists
+// (inc/streamed-games-list.php). One row-click-through table for any
+// Stream/Type/Stakes/Date style listing.
+.tps-streams-table {
+  width: 100%;
+  border-collapse: collapse;
+  // No background of its own — sits on whatever page background it's
+  // placed in. Overrides the generic `table { background-color: ... }`
+  // fallback further down this file, which would otherwise apply here too.
+  background: transparent;
+  color: var(--tps-text-color);
+  font-size: 16px;
+
+  thead {
+    display: none;
+  }
+
+  th,
+  td {
+    background: transparent;
+  }
+
+  tr {
+    display: flex;
+    align-items: center;
+    gap: var(--size-300);
+    padding: var(--size-300) var(--size-100);
+    border-bottom: 1px solid var(--tps-border-color);
+    min-height: var(--size-800);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  td {
+    padding: 0;
+  }
+
+  &__col-type,
+  &__col-stakes,
+  &__col-date,
+  &__col-result {
+    display: none;
+  }
+
+  &__col-thumbnail {
+    flex: none;
+  }
+
+  &__thumb {
+    display: flex;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__col-stream {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-100);
+
+    a {
+      color: var(--tps-link-color);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tps-link-color);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  &__meta-mobile {
+    color: var(--tps-text-muted-color);
+    font-size: 12.5px;
+  }
+
+  @media screen and (min-width: $breakpoint-medium) {
+    thead {
+      display: table-header-group;
+    }
+
+    thead tr {
+      display: table-row;
+      padding: 0;
+      min-height: 0;
+      border-bottom: 1px solid var(--tps-border-color);
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    thead th {
+      text-align: left;
+      padding: var(--size-300) var(--size-400);
+      color: var(--tps-heading-color);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    thead th.tps-streams-table__col-date,
+    thead th.tps-streams-table__col-result {
+      display: table-cell;
+      text-align: right;
+    }
+
+    tbody tr {
+      display: table-row;
+      padding: 0;
+      min-height: 0;
+    }
+
+    td {
+      padding: var(--size-300) var(--size-400);
+    }
+
+    &__col-type,
+    &__col-stakes,
+    &__col-date,
+    &__col-result {
+      display: table-cell;
+      color: var(--tps-text-color);
+    }
+
+    &__col-thumbnail {
+      width: 64px;
+      vertical-align: middle;
+    }
+
+    &__thumb {
+      width: 68px;
+      height: 68px;
+    }
+
+    &__col-date {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    &__col-result {
+      text-align: right;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    &__col-stream {
+      display: table-cell;
+
+      a {
+        font-size: 16.5px;
+      }
+    }
+
+    &__meta-mobile {
+      display: none;
+    }
+  }
+}
+
+// Player rankings table (platform-players.php): rank, avatar + name,
+// appearances, profit/loss. Same visual language as .tps-streams-table
+// (transparent bg, row hover, mobile stacking, click-through row), but
+// this one has real sortable headers (table-handler.js already wires up
+// [data-tablecol] clicks + a working sort REST param), so headers stay
+// interactive rather than being dropped like they were on the results table.
+.tps-players-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: transparent;
+  color: var(--tps-text-color);
+  font-size: 16px;
+
+  thead {
+    display: none;
+  }
+
+  th,
+  td {
+    background: transparent;
+  }
+
+  tr {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--size-300);
+    padding: var(--size-300) var(--size-100);
+    border-bottom: 1px solid var(--tps-border-color);
+    min-height: var(--size-800);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+  }
+
+  td {
+    padding: 0;
+  }
+
+  &__col-rank {
+    flex: none;
+    width: 24px;
+    color: var(--tps-text-muted-color);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__col-player {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__player-cell {
+    display: flex;
+    align-items: center;
+    gap: var(--size-300);
+    min-width: 0;
+  }
+
+  &__avatar {
+    flex: none;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--tps-bg-secondary-color);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__player-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-100);
+    min-width: 0;
+  }
+
+  &__player-info a {
+    position: relative;
+    color: var(--tps-link-color);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+
+    // Stretched-link: fills the row so the whole row is clickable while
+    // keeping focus on the real anchor (no JS click handler needed).
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tps-link-color);
+      outline-offset: 2px;
+    }
+  }
+
+  &__col-appearances,
+  &__col-profit {
+    display: none;
+  }
+
+  &__meta-mobile {
+    color: var(--tps-text-muted-color);
+    font-size: 12.5px;
+  }
+
+  @media screen and (min-width: $breakpoint-medium) {
+    thead {
+      display: table-header-group;
+    }
+
+    thead tr {
+      display: table-row;
+      padding: 0;
+      min-height: 0;
+      border-bottom: 1px solid var(--tps-border-color);
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    thead th {
+      text-align: right;
+      padding: var(--size-300) var(--size-400);
+      color: var(--tps-heading-color);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    thead th.tps-players-table__col-rank,
+    thead th.tps-players-table__col-player {
+      text-align: left;
+    }
+
+    tbody tr {
+      display: table-row;
+      padding: 0;
+      min-height: 0;
+    }
+
+    td {
+      padding: var(--size-300) var(--size-400);
+    }
+
+    &__col-rank {
+      width: 56px;
+    }
+
+    &__player-info a {
+      font-size: 16.5px;
+    }
+
+    &__avatar {
+      width: 76px;
+      height: 76px;
+    }
+
+    &__col-appearances,
+    &__col-profit {
+      display: table-cell;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__meta-mobile {
+      display: none;
+    }
+  }
+}
 
 /* Table Striped */
 .tps-table-striped {
@@ -85,7 +451,25 @@
 
 
 .tps-select {
+  // Native select arrows live in the browser's own control area, not the
+  // padding box — padding-right can't move them. Turning off native
+  // appearance and drawing our own arrow via background-image is the only
+  // way to actually control the gap between it and the border.
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--tps-bg-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23a1a1a1' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  color: var(--tps-text-color);
+  border: 1px solid var(--tps-border-color);
+  padding: 11px 32px 11px 11px;
+  font-size: 1rem;
+  border-radius: var(--tps-border-radius);
+  width: 100%;
   outline: 3px solid transparent;
+  cursor: pointer;
 
   &:active,
   &:focus {
@@ -93,14 +477,82 @@
   }
 }
 
-select#rows-per-page {
-  background: var(--tps-bg-color);
+// Results table controls bar (rows-per-page + pagination), sitting above
+// a .tps-streams-table. Plain flex layout, not the Bootstrap row/col grid
+// the rest of this file's older controls use.
+.tps-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-500);
+}
+
+.tps-results-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--size-400);
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--tps-border-color);
+  padding-bottom: var(--size-400);
+}
+
+.tps-results-controls__sort,
+.tps-results-controls__rows {
+  display: flex;
+  align-items: center;
+  gap: var(--size-300);
+
+  select {
+    width: auto;
+  }
+}
+
+.tps-results-controls__label {
+  color: var(--tps-text-muted-color);
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tps-results-controls__pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--size-200);
   color: var(--tps-text-color);
+  font-size: 14px;
+}
+
+// Groups rows + pagination together as one unit on the right, when a
+// search input (or anything else) sits on the left of the same bar.
+.tps-results-controls__right {
+  display: flex;
+  align-items: center;
+  gap: var(--size-500);
+  flex-wrap: wrap;
+}
+
+.tps-results-summary {
+  color: var(--tps-text-muted-color);
+  font-size: 13.5px;
+}
+
+.tps-players-search {
+  background: var(--tps-bg-color);
   border: 1px solid var(--tps-border-color);
-  padding: 11px 0 11px 11px;
-  font-size: 1rem;
+  color: var(--tps-text-color);
+  padding: var(--size-200) var(--size-300);
+  font-size: 14px;
   border-radius: var(--tps-border-radius);
-  width: 100%;
+  width: 240px;
+  max-width: 100%;
+
+  &::placeholder {
+    color: var(--tps-text-muted-color);
+  }
+
+  &:focus {
+    outline: 3px solid var(--tps-outline-color);
+  }
 }
 
 
@@ -155,18 +607,9 @@ select#rows-per-page {
 }
 
 .tps-table-number-input {
-  button {
-    border: 1px solid var(--tps-border-color);
-    background: var(--tps-bg-color);
-
-    &:disabled {
-      background: transparent;
-
-      svg {
-        fill: var(--tps-text-muted-color)
-      }
-    }
-  }
+  // Buttons here use .tps-btn.tps-btn__icon (buttons.scss) directly for
+  // padding/border/background/disabled state and icon color — nothing
+  // wrapper-specific needed anymore.
 
   span {
     display: flex;
@@ -196,152 +639,12 @@ select#rows-per-page {
   }
 }
 
-.player-hcl-results th[data-tablecol] {
-  cursor: pointer;
-}
-
-.table-col-icon {
-  display: flex;
-  flex-direction: column;
-}
-
-.table-col-icon-box {
-  height: 0.4rem;
-}
-
-.table-col-icon-box svg {
-  fill: var(--tps-text-muted-color);
-  stroke: var(--tps-text-muted-color);
-  vertical-align: inherit;
-}
-
-
-// ICONS CONTROL TODO
-.hcl-results-page-table th.active[data-coldir="ASC"] .table-col-icon-box:nth-child(1) svg,
-.hcl-results-page-table th.active[data-coldir="DESC"] .table-col-icon-box:nth-child(2) svg {
-  fill: var(--tps-heading-color);
-  stroke: var(--tps-heading-color);
-}
-
-.hcl-results-page-table .th-control {
-  @include disable-text-selection;
-}
-
-.player-hcl-results {
-  padding: 0px;
-  box-shadow: var(--tps-box-shadow);
-  border-radius: var(--tps-border-radius);
-  border: 1px solid var(--tps-border-color);
-  background: var(--tps-bg-secondary-color);
-  overflow: hidden;
-  overflow-x: auto;
-}
-
-@media screen and (min-width: 992px) {
-  .player-hcl-results {
-    padding: var(--size-200);
-  }
-}
-
-.player-hcl-results table {
-  color: var(--tps-text-color);
-}
-
-.player-hcl-results table td {
-  font-size: 1rem;
-  min-width: 100px;
-  vertical-align: middle;
-}
-
-.player-hcl-results .hcl-title-link {
-  font-size: 0.8rem;
-}
-
-@media screen and (min-width: 992px) {
-  .player-hcl-results .hcl-title-link {
-    font-size: 1rem;
-  }
-}
-
-.player-hcl-results table thead {
-  border-bottom: 1px solid var(--tps-border-color);
-}
-
-.player-hcl-results table th {
-  font-size: 0.8rem;
-}
-
-.player-hcl-results table th>div {
-  display: flex;
-  gap: 5px;
-}
-
-@media screen and (min-width: 992px) {
-  .player-hcl-results table td {
-    font-size: 1rem;
-  }
-
-  .player-hcl-results table th {
-    font-size: 1.2rem;
-  }
-}
-
-.results-table td,
-.results-table th {
-  border-color: var(--tps-border-color);
-}
-
-.player-hcl-results table td {
-  border-color: var(--tps-border-color);
-}
-
-.player-hcl-results table td {
-  /* text-align: end; */
-  text-align: start;
-}
-
-.player-hcl-results table td img {
-  object-fit: cover;
-  border-radius: var(--tps-border-radius);
-  width: 40px;
-  height: 40px;
-}
-
-@media screen and (min-width: 992px) {
-  .player-hcl-results table td img {
-    width: 60px;
-    height: 60px;
-  }
-}
-
-.player-hcl-results table td .text-danger {
-  margin-left: -0.6ch;
-}
-
-
-.player-hcl-results table td:first-child {
-  color: var(--tps-heading-color);
-}
-
-.player-hcl-results table td a {
-  color: var(--tps-link-color);
-}
-
-.player-hcl-results table tr {
-  margin-top: var(--size-300);
-  padding: var(--size-300);
-}
-
-.player-hcl-results table tr:last-child td,
-.player-hcl-results tr:last-child th {
-  border: 0px;
-}
-
-@media screen and (min-width: 992px) {
-  .player-hcl-results .hcl-results-page-table {
-    table-layout: fixed;
-  }
-}
+// Sorting for .tps-players-table is driven by an external "Sort by" select
+// (see .tps-results-controls__sort in the controls-bar rules above) rather
+// than clickable column headers — no per-header sort-icon CSS needed here
+// anymore. That also fixed a column-reflow bug: the old approach added/
+// removed an icon's width from whichever header was active, which resized
+// that column and visibly shifted the header text every time you sorted.
 
 
 

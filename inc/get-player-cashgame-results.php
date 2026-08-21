@@ -33,6 +33,7 @@ function get_player_cashgame_results($player_id, $term_id) {
       'title'               => get_the_title($cash_game_id),
       'permalink'           => get_permalink($cash_game_id),
       'date'                => $game_date_obj->format('d/m/Y'),
+      'stakes'              => get_field('stakes_played', $cash_game_id),
     );
   }
 

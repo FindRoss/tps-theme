@@ -1,12 +1,10 @@
+// These only exist when the player has a News section — guard against
+// null so a player with no news doesn't crash the rest of this script.
 const playerNewsRow = document.querySelector('#player-news-row');
 const loadMoreBtn = document.getElementById('loadMorePlayerNews');
-const loadMoreBtnIcon = loadMoreBtn.querySelector('i');
+const loadMoreBtnIcon = loadMoreBtn ? loadMoreBtn.querySelector('i') : null;
 const loadMorePlayerNewsContainer = document.getElementById('loadMorePlayerNewsContainer');
 const spinningAnimationClass = 'spinning-icon';
-
-// HCL Results
-const hclResultsContainer = document.querySelector('.player-stream-results');
-const hclResultsTableBody = hclResultsContainer.querySelector('table > tbody');
 
 let usedPosts = [];
 let postsToUse = wpApiSettings.posts.map(String);
@@ -111,44 +109,6 @@ async function fetchPosts() {
   loadMoreBtn.disabled = false;
 }
 
-function newPaintAppRows(event, termID) {
-
-  let trimmedApps = wpApiSettings[termID].slice(8);
-
-  let btn = event.target.closest('.btn.btn-link');
-  btn.classList.remove('d-flex');
-  btn.classList.add('d-none');
-  btn.classList.add('visually-hidden');
-
-  let table = btn.parentElement.parentElement;
-  let tbody = table.querySelector('tbody');
-
-  let apps = '';
-
-  trimmedApps.map(app => {
-    // Format profile / loss output
-    const numPositive = app.tournament_winnings > 0;
-    const absoluteValue = Math.abs(app.tournament_winnings).toLocaleString();
-
-    // Format date output
-    const date = formatDate(app.date);
-
-    apps += `
-        <tr>
-          <td><a href="${app.permalink}">${app.title}</a></td>
-          <td>${date}</td>
-          <td class="text-end">
-            <div class="fw-bold ${numPositive ? 'text-success' : 'text-danger'}">
-              ${numPositive ? '' : '-'}$${absoluteValue}
-            </div>
-          </td>
-        </tr>
-      `;
-  });
-
-  tbody.insertAdjacentHTML("beforeend", apps);
-}
-
 async function pageInit() {
   // handleMoreApps()
 
@@ -161,6 +121,51 @@ async function pageInit() {
 }
 
 pageInit();
+
+// Cash game + tournament results accordions (expand/collapse + "show more"
+// per platform/event type). Both sections share the same markup/behavior,
+// the only difference being cash games have a Stakes column and events don't.
+document.querySelectorAll('.tps-accordion-item__header').forEach(function(header) {
+  header.addEventListener('click', function() {
+    header.closest('.tps-accordion-item').classList.toggle('is-open');
+  });
+});
+
+function buildResultRow(app, hasStakes) {
+  const winnings = app.tournament_winnings;
+  const color = winnings < 0 ? 'text-danger' : 'text-success';
+  const amount = (winnings < 0 ? '-' : '') + '$' + Math.abs(winnings).toLocaleString();
+  const date = formatDate(app.date);
+  const stakes = hasStakes ? (app.stakes || '') : '';
+  const metaParts = (hasStakes ? [stakes] : []).concat([date]);
+
+  return '<tr class="tps-streams-table__row">' +
+    '<td class="tps-streams-table__col-stream">' +
+      '<a href="' + app.permalink + '">' + app.title + '</a>' +
+      '<div class="tps-streams-table__meta-mobile">' + metaParts.join(' · ') + ' · <span class="' + color + '">' + amount + '</span></div>' +
+    '</td>' +
+    (hasStakes ? '<td class="tps-streams-table__col-stakes">' + stakes + '</td>' : '') +
+    '<td class="tps-streams-table__col-date">' + date + '</td>' +
+    '<td class="tps-streams-table__col-result"><span class="' + color + '">' + amount + '</span></td>' +
+    '</tr>';
+}
+
+document.querySelectorAll('[data-show-more-cashgame], [data-show-more-event]').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    const hasStakes = btn.hasAttribute('data-show-more-cashgame');
+    const key = hasStakes ? btn.dataset.term : btn.dataset.type;
+    const allApps = wpApiSettings[key] || [];
+    const table = document.getElementById(btn.dataset.table);
+    const tbody = table.querySelector('tbody');
+    const alreadyShown = tbody.querySelectorAll('tr').length;
+    const remainingApps = allApps.slice(alreadyShown);
+
+    tbody.insertAdjacentHTML('beforeend', remainingApps.map(function(app) {
+      return buildResultRow(app, hasStakes);
+    }).join(''));
+    btn.remove();
+  });
+});
 
 
 

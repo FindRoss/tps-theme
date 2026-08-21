@@ -1,0 +1,183 @@
+@use 'breakpoints' as *;
+
+// One-off breakpoint for the intro/sidebar grid collapse — no existing Sass
+// variable sits at this value, so it's named here rather than left as a
+// raw literal.
+$breakpoint-platform-sidebar: 1100px;
+
+.platform-overview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-600);
+}
+
+// Intro copy + sidebar info card
+.platform-overview__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--size-600);
+  align-items: start;
+
+  @media screen and (min-width: $breakpoint-platform-sidebar) {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: var(--size-800);
+  }
+}
+
+.platform-overview__body {
+  color: var(--tps-text-color);
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 820px;
+
+  > * {
+    margin: 0 0 var(--size-500);
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  // :not(.tps-btn) so a button block embedded in body content (e.g. a
+  // "Read More" button) keeps its own color instead of being overridden
+  // by this prose-link rule.
+  a:not(.tps-btn) {
+    color: var(--tps-link-color);
+  }
+}
+
+// Sidebar info card: socials + stats
+.platform-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-400);
+  padding: var(--size-500);
+  border: 1px solid var(--tps-border-color);
+  background: var(--tps-bg-color);
+}
+
+.platform-info-card__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-300);
+}
+
+.platform-info-card__label {
+  color: var(--tps-text-muted-color);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.platform-info-card__socials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-200);
+  font-size: 15.5px;
+  font-weight: 500;
+}
+
+.platform-info-card__social-link {
+  color: var(--tps-link-color);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  svg {
+    width: 13px;
+    height: 13px;
+    vertical-align: -1px;
+  }
+}
+
+.platform-info-card__divider {
+  height: 1px;
+  background: var(--tps-border-color);
+}
+
+.platform-info-card__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: var(--size-400) var(--size-300);
+}
+
+.platform-info-card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-100);
+}
+
+.platform-info-card__stat-value {
+  color: var(--tps-heading-color);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.platform-info-card__stat-label {
+  color: var(--tps-text-muted-color);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+// Latest streams
+.platform-latest-streams {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-400);
+}
+
+.platform-latest-streams__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--size-500);
+  border-bottom: 1px solid var(--tps-border-color);
+  padding-bottom: var(--size-300);
+}
+
+.platform-latest-streams__all-link {
+  color: var(--tps-link-color);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  svg {
+    width: 12px;
+    height: 12px;
+    vertical-align: 1px;
+  }
+}
+
+// .tps-streams-table itself now lives in modules/tables.scss as a global,
+// reusable component (also used by inc/streamed-games-list.php's markup).
+
+// Button itself is the global .tps-btn (assets/css/modules/buttons.scss).
+// Full-width-on-mobile is specific to this placement, not the button
+// component generally, so it's scoped here rather than baked into .tps-btn.
+.platform-show-more {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--size-200);
+
+  .tps-btn {
+    width: 100%;
+
+    @media screen and (min-width: $breakpoint-medium) {
+      width: auto;
+    }
+  }
+}
+
+// Hidden-until-populated YouTube stats table (see platform-overview.php)
+.platform-info-card__youtube-table {
+  width: 100%;
+  border-collapse: collapse;
+}

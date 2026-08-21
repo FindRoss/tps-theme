@@ -45,3 +45,73 @@ function tps_get_platform_template_part($current_page_id, $pillar_page_title) {
 
   return null;
 }
+
+/**
+ * Display labels for known platform child-page slugs, used for the
+ * breadcrumb/tab bar tab labels. Falls back to the child page's own title
+ * for any slug not listed here.
+ */
+function tps_get_platform_tab_labels() {
+  return array(
+    'players'   => 'Players',
+    'streamers' => 'Players', // alias, matches tps_get_platform_route_map()
+    'news'      => 'News',
+    'results'   => 'Results',
+    'series'    => 'Series',
+  );
+}
+
+/**
+ * Builds the data needed to render the shared platform breadcrumb + tab bar
+ * (template-parts/platform/platform-bar.php), given a pillar page and the
+ * page currently being viewed. Used by both templates/platform.php (the
+ * pillar page and its Players/News/Results/etc children) and
+ * single-cash_game.php (an individual stream, which isn't itself a child
+ * of the pillar page in the post_parent sense, but still shows this nav).
+ */
+function tps_build_platform_bar_data($pillar_page_id, $current_page_id) {
+  $current_page_url = get_permalink($current_page_id);
+  $pillar_page_url   = get_the_permalink($pillar_page_id);
+  $pillar_page_title = get_the_title($pillar_page_id);
+  $pillar_page_image = get_the_post_thumbnail_url($pillar_page_id, 'medium');
+
+  $children = get_pages(array(
+    'child_of'    => $pillar_page_id,
+    'sort_column' => 'menu_order',
+    'sort_order'  => 'ASC',
+  ));
+
+  $tab_labels = tps_get_platform_tab_labels();
+
+  $tabs = array(
+    array(
+      'label'     => 'Overview',
+      'url'       => $pillar_page_url,
+      'is_active' => ($current_page_url == $pillar_page_url),
+    ),
+  );
+
+  $results_url = '';
+  foreach ($children as $child) {
+    $slug      = get_post_field('post_name', $child->ID);
+    $permalink = get_permalink($child->ID);
+    $label     = isset($tab_labels[$slug]) ? $tab_labels[$slug] : get_the_title($child->ID);
+
+    $tabs[] = array(
+      'label'     => $label,
+      'url'       => $permalink,
+      'is_active' => ($current_page_url == $permalink),
+    );
+
+    if ($slug === 'results') $results_url = $permalink;
+  }
+
+  return array(
+    'pillar_page_url'    => $pillar_page_url,
+    'pillar_page_title'  => $pillar_page_title,
+    'pillar_page_image'  => $pillar_page_image,
+    'tabs'                => $tabs,
+    'results_url'         => $results_url,
+    'streamed_games_url'  => site_url('/streamed-games/'),
+  );
+}

@@ -39,8 +39,6 @@
   }
 
   $person_profile = 'https://toppokerstreamers.com/wp-content/uploads/2024/08/anonymous-person-profile__100x100-jpg.webp';
-
-  require locate_template('template-parts/platform/platform-nav.php');
 ?>
 
   <main class="page-main">

@@ -1,129 +1,105 @@
-<?php 
+<?php
 
-function displayPlayerStreamResults($apps, $term_id) { ?>
-  <div class="row">
-    <div class="col-12 col-lg-8">
+function displayPlayerStreamResults($apps, $term_id, $is_open = false) {
+  // APPS_TO_DISPLAY must match the slice offset used by the "show more"
+  // handler in player.js.
+  $APP_TO_DISPLAY = 8;
+  $total_apps = count($apps);
+  $apps_left = $total_apps - $APP_TO_DISPLAY;
 
-      <?php 
-        // APPS_TO_DISPLAY variable must match number on Player.js
-        // This number is related to the Javascript to show more function
-        $APP_TO_DISPLAY = 8;
-        $appsLeftToDisplay = (count($apps) - $APP_TO_DISPLAY);
-        $loopCount = 1;
+  $total_winnings = 0;
+  $first_ts = null;
+  $last_ts = null;
 
-        // Stats
-        $statAppearances = count($apps);
-        $statFirstAppearance = '';
-        $statLastAppearance = '';
-        $statTotalWinnings = 0; 
+  foreach ($apps as $app) {
+    $total_winnings += $app['tournament_winnings'];
+    $app_date = DateTime::createFromFormat('d/m/Y', $app['date']);
+    if (!$app_date) continue;
+    $ts = $app_date->getTimestamp();
+    if ($first_ts === null || $ts < $first_ts) $first_ts = $ts;
+    if ($last_ts === null || $ts > $last_ts) $last_ts = $ts;
+  }
 
-        // Need these variable to later compare to the other dates to work out what is first / last
-        $firstAppDateObject = DateTime::createFromFormat('d/m/Y', $apps[0]['date']);
-        $firstDateTimestamp = $lastDateTimestamp = $firstAppDateObject->getTimestamp();
-      ?>
+  $net_color     = $total_winnings < 0 ? 'text-danger' : 'text-success';
+  $net_formatted = ($total_winnings < 0 ? '-' : '') . '$' . number_format(abs($total_winnings));
 
-      <!-- HCL RESULTS -->
-      <div class="tps-table-results player-stream-results">
-        <table class="table">
-          <tbody>
+  $term      = get_term($term_id, 'streams');
+  $term_name = ($term && !is_wp_error($term)) ? $term->name : '';
+  ?>
 
-            <?php foreach ($apps as $app) : ?>
-              
-              <?php if ($loopCount <= $APP_TO_DISPLAY) { ?>
+  <div class="tps-accordion-item<?php echo $is_open ? ' is-open' : ''; ?>">
+    <button type="button" class="tps-accordion-item__header">
+      <span class="tps-accordion-item__toggle" aria-hidden="true"></span>
+      <span class="tps-accordion-item__name"><?php echo esc_html($term_name); ?></span>
+      <span class="tps-accordion-item__summary">
+        <span class="tps-accordion-item__apps"><?php echo esc_html($total_apps); ?> appearances</span>
+      </span>
+    </button>
 
-                <?php  
-                  $hcl_winnings = $app['tournament_winnings'];
-                  
-                  $winnings_to_positive = abs($hcl_winnings); 
-                  $winnings_formatted = number_format(intval($winnings_to_positive));
-                  
-                  $app_title = get_the_title($app['id']);
-                  $app_permalink = get_permalink($app['id']);
-
-                  // Convert the date string to a UNIX timestamp using strtotime
-                  $app_timestamp = strtotime(str_replace('/', '-', $app['date']));
-
-                  // Format the timestamp as 'd M Y' (e.g., '30 Oct 2023')
-                  $app_formatted_date = date('d M Y', $app_timestamp);
-                  ?>
-
-                  <tr>
-                    <td><a href="<?php echo $app_permalink; ?>"><?php echo $app_title; ?></a></td>
-                    <td><?php echo $app_formatted_date; ?></td>
-                    <td class="text-end">
-                      <div class="fw-bold <?php echo ($hcl_winnings < 0) ? 'text-danger' : 'text-success'; ?>">
-                        <?php echo ($hcl_winnings < 0) ? '-' : ''; ?>$<?php echo $winnings_formatted; ?>
-                      </div>
-                    </td>
-                  </tr>
-              
-              <?php } ?>
-              
-              <?php 
-              // Total Winnings 
-              $statTotalWinnings += $app['tournament_winnings']; 
-
-              // Calculate First and Latest Appearance
-              $appDateObj = DateTime::createFromFormat('d/m/Y', $app['date']);
-              $appDateTimestamp = $appDateObj->getTimestamp();
-
-              if ($appDateTimestamp < $firstDateTimestamp) {
-                  $firstDateTimestamp = $appDateTimestamp;
-              } 
-
-              if ($appDateTimestamp > $lastDateTimestamp) {
-                  $lastDateTimestamp = $appDateTimestamp;
-              }
-
-              ?>
-              
-              <?php $loopCount++; ?>
-            <?php endforeach; ?>
-
-          </tbody>
-        </table>
-
-        <?php if ($appsLeftToDisplay > 0) { ?>
-          <div class="d-flex justify-content-center" id="hclResultsBtn">
-            <button type="button" class="btn btn-link" onclick="newPaintAppRows(event, '<?php echo $term_id; ?>')">Show <?php echo $appsLeftToDisplay; ?> more appearances <i class="fa-solid fa-arrow-down"></i></button>
-          </div>
-        <?php }; ?>
-
+    <div class="tps-accordion-item__body">
+      <div class="tps-accordion-stats">
+        <div class="tps-accordion-stats__item">
+          <div class="tps-accordion-stats__label">Appearances</div>
+          <div class="tps-accordion-stats__value"><?php echo esc_html($total_apps); ?></div>
+        </div>
+        <div class="tps-accordion-stats__item">
+          <div class="tps-accordion-stats__label">Net profit</div>
+          <div class="tps-accordion-stats__value <?php echo esc_attr($net_color); ?>"><?php echo esc_html($net_formatted); ?></div>
+        </div>
+        <div class="tps-accordion-stats__item">
+          <div class="tps-accordion-stats__label">First appearance</div>
+          <div class="tps-accordion-stats__value tps-accordion-stats__value--muted"><?php echo $first_ts ? esc_html(date('d M Y', $first_ts)) : '—'; ?></div>
+        </div>
+        <div class="tps-accordion-stats__item">
+          <div class="tps-accordion-stats__label">Last appearance</div>
+          <div class="tps-accordion-stats__value tps-accordion-stats__value--muted"><?php echo $last_ts ? esc_html(date('d M Y', $last_ts)) : '—'; ?></div>
+        </div>
       </div>
-      <!-- /HCL RESULTS --> 
-    </div><!-- .col --> 
-    
-    <!-- HCL STATS --> 
-    <div class="col-12 col-lg-4">
 
-      <?php 
-        $stats = array(
-          array(
-            'title' => 'Appearancecs',
-            'data'  => $statAppearances
-          ),
-          array (
-            'title' => 'Net Profit',
-            'data'  => ($statTotalWinnings < 0 ? '-' : '') . '$' . (number_format(abs($statTotalWinnings)))
-          ),
-          array (
-            'title' => 'First Appearance',
-            'data'  => date('d M Y', $firstDateTimestamp)
-          ),
-          array (
-            'title' => 'Last Appearance',
-            'data'  => date('d M Y', $lastDateTimestamp)
-          )
-          );
+      <table class="tps-streams-table" id="cashgame-results-<?php echo esc_attr($term_id); ?>">
+        <thead>
+          <tr>
+            <th class="tps-streams-table__col-stream">Stream</th>
+            <th class="tps-streams-table__col-stakes">Stakes</th>
+            <th class="tps-streams-table__col-date">Date</th>
+            <th class="tps-streams-table__col-result">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php $i = 0;
+          foreach ($apps as $app) :
+            if ($i >= $APP_TO_DISPLAY) break;
+            $i++;
 
-        foreach($stats as $stat) { ?>
-          <div class="results-info-box">
-            <div class="results-info-box__title"><?php echo $stat['title']; ?></div>
-            <div class="results-info-box__data"><?php echo $stat['data']; ?></div>
-          </div>
-        <?php } ?>
+            $winnings = $app['tournament_winnings'];
+            $color    = $winnings < 0 ? 'text-danger' : 'text-success';
+            $amount   = ($winnings < 0 ? '-' : '') . '$' . number_format(abs($winnings));
+            $date_ts  = strtotime(str_replace('/', '-', $app['date']));
+            $date_fmt = date('d M Y', $date_ts);
+          ?>
+            <tr class="tps-streams-table__row">
+              <td class="tps-streams-table__col-stream">
+                <a href="<?php echo esc_url($app['permalink']); ?>"><?php echo esc_html($app['title']); ?></a>
+                <div class="tps-streams-table__meta-mobile">
+                  <?php echo esc_html($app['stakes']); ?> · <?php echo esc_html($date_fmt); ?> · <span class="<?php echo esc_attr($color); ?>"><?php echo esc_html($amount); ?></span>
+                </div>
+              </td>
+              <td class="tps-streams-table__col-stakes"><?php echo esc_html($app['stakes']); ?></td>
+              <td class="tps-streams-table__col-date"><?php echo esc_html($date_fmt); ?></td>
+              <td class="tps-streams-table__col-result"><span class="<?php echo esc_attr($color); ?>"><?php echo esc_html($amount); ?></span></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+
+      <?php if ($apps_left > 0) : ?>
+        <div class="tps-accordion-item__more">
+          <button type="button" class="tps-btn" data-show-more-cashgame data-term="<?php echo esc_attr($term_id); ?>" data-table="cashgame-results-<?php echo esc_attr($term_id); ?>">
+            Show <?php echo esc_html($apps_left); ?> more appearances
+          </button>
+        </div>
+      <?php endif; ?>
     </div>
-
-  </div><!-- .row --> 
-
-<?php }
+  </div>
+  <?php
+}

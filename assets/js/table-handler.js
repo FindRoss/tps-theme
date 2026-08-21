@@ -15,14 +15,23 @@ class TableHandler {
     this.selectRows = document.getElementById('rows-per-page');
     this.loaderBar = document.getElementById('loader-bar');
     this.wrapper = document.getElementById('table-results-wrapper');
-    this.sortHeaders = document.querySelectorAll('[data-tablecol]');
+    this.showingText = document.getElementById('table-showing-text'); // optional, not every table has this
+    this.selectSort = document.getElementById('sort-by'); // optional, not every table has this
 
     // State
     this.currentPage = 1;
     this.rowsPerPage = 10;
     this.totalPages = Math.ceil(parseInt(this.table.dataset.totalResults) / this.rowsPerPage);
-    this.sortColumn = null;
-    this.sortDir = 'DESC';
+    // Seed from the sort dropdown's pre-selected option, so it matches
+    // whatever order PHP already rendered on load.
+    if (this.selectSort) {
+      const [col, dir] = this.selectSort.value.split(':');
+      this.sortColumn = col;
+      this.sortDir = dir;
+    } else {
+      this.sortColumn = null;
+      this.sortDir = 'DESC';
+    }
     this.searchQuery = '';
 
     this.init();
@@ -32,11 +41,7 @@ class TableHandler {
     if (this.btnPrev) this.btnPrev.addEventListener('click', () => this.prevPage());
     if (this.btnNext) this.btnNext.addEventListener('click', () => this.nextPage());
     if (this.selectRows) this.selectRows.addEventListener('change', () => this.onRowsChange());
-    if (this.sortHeaders) {
-      this.sortHeaders.forEach(header => {
-        header.addEventListener('click', () => this.onColumnSort(header));
-      });
-    }
+    if (this.selectSort) this.selectSort.addEventListener('change', () => this.onSortChange());
     this.updateControls();
   }
 
@@ -61,43 +66,12 @@ class TableHandler {
     this.fetchData();
   }
 
-  onColumnSort(header) {
-    const col = header.dataset.tablecol;
-    const dir = header.dataset.coldir;
-
-    // Toggle direction if clicking same column
-    if (this.sortColumn === col) {
-      this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
-    } else {
-      this.sortColumn = col;
-      this.sortDir = dir || 'DESC';
-    }
-
-    // Update header UI
-    this.updateSortUI();
+  onSortChange() {
+    const [col, dir] = this.selectSort.value.split(':');
+    this.sortColumn = col;
+    this.sortDir = dir;
     this.currentPage = 1;
     this.fetchData();
-  }
-
-  updateSortUI() {
-    this.sortHeaders.forEach(header => {
-      const isActive = header.dataset.tablecol === this.sortColumn;
-      header.classList.toggle('active', isActive);
-
-      const iconBoxes = header.querySelectorAll('.table-col-icon-box');
-      if (iconBoxes.length >= 2) {
-        const upIcon = iconBoxes[0];
-        const downIcon = iconBoxes[1];
-
-        upIcon.style.display = 'none';
-        downIcon.style.display = 'none';
-
-        if (isActive) {
-          const iconBox = this.sortDir === 'ASC' ? upIcon : downIcon;
-          iconBox.style.display = 'block';
-        }
-      }
-    });
   }
 
   setSearchQuery(query) {
@@ -150,7 +124,10 @@ class TableHandler {
   }
 
   buildRows(results) {
-    return results.map(row => this.rowBuilder(row)).join('');
+    // Index is passed through for row builders that need a running rank
+    // (e.g. platform-players.php); builders that only take `row` just
+    // ignore the second argument.
+    return results.map((row, i) => this.rowBuilder(row, i)).join('');
   }
 
   updateControls() {
@@ -158,6 +135,16 @@ class TableHandler {
     if (this.btnNext) this.btnNext.disabled = this.currentPage >= this.totalPages;
     if (this.pageCountDisplay) {
       this.pageCountDisplay.textContent = this.currentPage + ' of ' + this.totalPages;
+    }
+    if (this.showingText) {
+      const total = parseInt(this.table.dataset.totalResults) || 0;
+      if (total === 0) {
+        this.showingText.textContent = 'No results';
+      } else {
+        const start = (this.currentPage - 1) * this.rowsPerPage + 1;
+        const end = Math.min(this.currentPage * this.rowsPerPage, total);
+        this.showingText.textContent = 'Showing ' + start + '–' + end + ' of ' + total;
+      }
     }
   }
 }

@@ -1,4 +1,8 @@
-// Just copying the main style and pasting it here.
+/* Editor-only preview styles for the TPS Button block. The block editor
+   iframe doesn't load the theme's compiled build/style-index.css, so the
+   relevant tokens and .tps-btn rules are duplicated here by hand. Keep this
+   in sync with assets/css/modules/buttons.scss and style.scss's :root
+   whenever those change. */
 :root {
   --tps-primary-color: #ff6562;
   --tps-bg-color: #121212;
@@ -7,7 +11,7 @@
   --tps-text-color: #d9d9d9;
   --tps-text-reverse-color: #1c2334;
   --tps-link-color: #0085cc;
-  --tps-outline-color: rgba(0, 133, 204, 0.3);
+  --tps-outline-color: rgba(0, 133, 204, 0.7);
   --tps-link-active-color: #0056b3;
   --tps-heading-color: #ededed;
   --tps-text-muted-color: #a1a1a1;
@@ -61,17 +65,47 @@ html.light-theme {
 }
 
 .tps-btn {
-  color: inherit;
-  font-weight: bold;
+  display: inline-block;
+  color: var(--tps-heading-color);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
-  padding : var(--size-200) var(--size-400);
-  border-radius: var(--tps-border-radius);
-  border: 2px solid transparent;
+  text-align: center;
+  padding: var(--size-300) var(--size-600);
+  background: transparent;
+  border: 1px solid var(--tps-border-color);
+  outline: 3px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tps-btn:hover {
+  background: var(--tps-primary-color);
+  border-color: var(--tps-primary-color);
+  color: #fff;
+}
+
+.tps-btn:active,
+.tps-btn:focus {
+  outline: 3px solid var(--tps-outline-color);
+}
+
+.tps-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tps-btn:disabled:hover {
+  background: transparent;
+  border-color: var(--tps-border-color);
+  color: var(--tps-heading-color);
 }
 
 .tps-btn--big {
-  font-size: 20px;
-  padding: var(--size-300) var(--size-500);
+  font-size: 18px;
+  padding: var(--size-400) var(--size-700);
 }
 
 .tps-btn__primary {

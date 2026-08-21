@@ -54,6 +54,10 @@ function get_player_results_by_streams_term($data) {
         $results = $wpdb->get_results($wpdb->prepare($results_query, $term, $rows, $offset));
     }
 
+    foreach ($results as $row) {
+        $row->link = get_permalink($row->player_id);
+    }
+
     // Calculate total pages
     $total_pages = ceil($total_players / $rows);
 

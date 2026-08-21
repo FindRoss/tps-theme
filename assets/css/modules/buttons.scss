@@ -1,47 +1,47 @@
-.tps-primary-btn {
-  background: var(--tps-primary-color);
-  color: #fff;
-}
-
-.tps-primary-btn:hover {
-  color: #f9f9f9;
-}
-
-.tps-primary-btn:focus {
-  /* color: var(--tps-text-reverse-color); */
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.tps-secondary-btn {
-  background-color: var(--tps-bg-reverse-color);
-  color: var(--tps-text-reverse-color);
-}
-
-.tps-secondary-btn svg {
-  fill: var(--tps-text-reverse-color);
-}
-
-
+// Standard site-wide button. This is the ghost/outline look used by
+// .platform-show-more__btn in the original design handoff — .tps-btn now
+// IS that look by default, usable on its own without a modifier.
 .tps-btn {
-  color: inherit;
-  font-weight: bold;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-decoration: none;
-  padding: var(--size-200) var(--size-400);
-  border-radius: var(--tps-border-radius);
-  border: 2px solid transparent;
+  text-align: center;
+  cursor: pointer;
+  padding: var(--size-300) var(--size-600);
+  background: transparent;
+  color: var(--tps-heading-color);
   outline: 3px solid transparent;
-  transition: outline 0.2s ease-in-out;
-  transition: background-color 0.2s ease-in-out;
-  transition: color 0.1s ease-in-out;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  border: 1px solid var(--tps-border-color);
+
+  &:hover {
+    background: var(--tps-primary-color);
+    border-color: var(--tps-primary-color);
+    color: #fff;
+  }
 
   &:active,
   &:focus {
     outline: 3px solid var(--tps-outline-color);
   }
 
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      background: transparent;
+      border-color: var(--tps-border-color);
+      color: var(--tps-heading-color);
+    }
+  }
+
   &--big {
-    font-size: 20px;
-    padding: var(--size-300) var(--size-500);
+    font-size: 18px;
+    padding: var(--size-400) var(--size-700);
   }
 
   &__primary {
@@ -64,39 +64,34 @@
   }
 
   &__outline {
-    border: 2px solid var(--tps-heading-color);
+    // border: 2px solid var(--tps-heading-color);
+    border: 1px solid var(--tps-border-color);
     background-color: var(--tps-bg-color);
     color: var(--tps-heading-color);
 
+
     &:hover {
-      background: var(--tps-bg-reverse-color);
-      color: var(--tps-text-reverse-color);
+      background: var(--tps-primary-color);
+      border-color: var(--tps-primary-color);
+      color: #fff;
+    }
+  }
+
+  // For a button whose entire content is a single SVG (e.g. pagination
+  // prev/next arrows) rather than text. Square-ish padding instead of the
+  // text-button padding above, and svg { fill: currentColor } so the icon
+  // actually picks up the button's color/hover-fill instead of rendering
+  // with whatever fill (or none/black) the SVG markup itself carries.
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--size-200);
+
+    svg {
+      display: block;
+      fill: currentColor;
     }
   }
 }
-
-
-.tps-btn-primary {
-  background-color: var(--tps-primary-color);
-  color: #f4f4f4;
-}
-
-.tps-btn-primary:hover,
-.tps-btn-primary:active {
-  color: #ffffff;
-}
-
-.tps-btn-outline {
-  color: rgba(var(--tps-heading-color), 0.5);
-  border: 2px solid var(--tps-border-color);
-}
-
-.tps-btn-outline:hover,
-.tps-btn-outline:active {
-  color: var(--tps-heading-color);
-}
-
-
-
-
 

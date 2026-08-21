@@ -30,65 +30,59 @@ function streamedGamesList($term_id = null, $post_id = null) {
 
   if ($games->have_posts()) : ?>
 
-    <div class="cash-game-table-wrapper">
-      <table class="table cash-game-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Stream</th>
-            <th>Type</th>
-            <th>Stakes</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-    
-          <?php while ($games->have_posts()) : $games->the_post();
+    <table class="tps-streams-table">
+      <thead>
+        <tr>
+          <th class="tps-streams-table__col-thumbnail"></th>
+          <th class="tps-streams-table__col-stream">Stream</th>
+          <th class="tps-streams-table__col-type">Type</th>
+          <th class="tps-streams-table__col-stakes">Stakes</th>
+          <th class="tps-streams-table__col-date">Date</th>
+        </tr>
+      </thead>
+      <tbody>
 
-            // Should only ever be one term.
-            $terms = get_the_terms(get_the_ID(), 'streams');
+        <?php while ($games->have_posts()) : $games->the_post();
 
-            if ($terms && !is_wp_error($terms)) {
+          // Should only ever be one term.
+          $terms = get_the_terms(get_the_ID(), 'streams');
 
-              // Get the term icon
-              $term_icon = get_field('icon', $terms[0]);
-              $term_name = $terms[0]->name;
+          if ($terms && !is_wp_error($terms)) {
 
-              // $main_page      = get_field('main_page', $terms[0]);
-              // $main_page_link = get_the_permalink($main_page[0]);
-              // Dont need this:  $main_page_img = get_the_post_thumbnail_url($main_page[0], 'platform');
+            $term_name = $terms[0]->name;
+            $term_icon = get_field('icon', $terms[0]);
 
-              $display_title = get_field('display_title');
-              $game_type     = get_field('game_type');
-              $stakes_played = get_field('stakes_played');
-              $date          = get_field('date');
-              $display_date  = "Jan 24th"; 
+            $display_title = get_field('display_title');
+            $game_type     = get_field('game_type');
+            $stakes_played = get_field('stakes_played');
+            $date          = get_field('date');
 
-              // Not working
-              $formatted_date = formatTableDate($date);
-              
-              // Start output buffering
-              ob_start(); ?>
+            $formatted_date = formatTableDate($date);
+            $permalink      = get_the_permalink();
+            ?>
 
-                <tr>   
-                  <td><div><img src="<?php echo $term_icon; ?>" alt="<?php echo $terms[0]->name; ?>" width="50" height="50"></div></td>
-                  <td><div><a href="<?php the_permalink(); ?>"><?php echo $term_name; ?>: <?php echo $display_title; ?></a></div></td>
-                  <td><div><?php echo $game_type; ?></div></td>
-                  <td><div><?php echo $stakes_played; ?></div></td>
-                  <td><div><?php echo $formatted_date; ?></div></td>
-                </tr>
+            <tr class="tps-streams-table__row">
+              <td class="tps-streams-table__col-thumbnail">
+                <?php if ($term_icon) : ?>
+                  <a class="tps-streams-table__thumb" href="<?php echo esc_url($permalink); ?>" tabindex="-1" aria-hidden="true"><img src="<?php echo esc_url($term_icon); ?>" alt="" loading="lazy" /></a>
+                <?php endif; ?>
+              </td>
+              <td class="tps-streams-table__col-stream">
+                <a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($term_name); ?>: <?php echo esc_html($display_title); ?></a>
+                <div class="tps-streams-table__meta-mobile">
+                  <?php echo esc_html($formatted_date); ?> · <?php echo esc_html($game_type); ?> · <?php echo esc_html($stakes_played); ?>
+                </div>
+              </td>
+              <td class="tps-streams-table__col-type"><?php echo esc_html($game_type); ?></td>
+              <td class="tps-streams-table__col-stakes"><?php echo esc_html($stakes_played); ?></td>
+              <td class="tps-streams-table__col-date"><?php echo esc_html($formatted_date); ?></td>
+            </tr>
 
-              <?php
-              // Get the buffered content and clean the buffer
-              $content = ob_get_clean();
+            <?php
+          }
 
-              // Output the cleaned content if needed
-              echo $content;
-            }
-
-          endwhile;  ?>
-        </tbody>
-      </table>
-    </div>
+        endwhile; ?>
+      </tbody>
+    </table>
   <?php endif;
 };

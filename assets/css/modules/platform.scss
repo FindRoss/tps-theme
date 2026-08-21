@@ -1,79 +1,219 @@
 @use 'breakpoints' as *;
 
-.platform-menu-wrapper {
-  background: var(--tps-base-color);
-  border-top: 1px solid var(--tps-border-color);
+// Platform bar: breadcrumb + identity + tabs
+.platform-bar {
+  background: var(--tps-bg-color);
   border-bottom: 1px solid var(--tps-border-color);
 }
 
-.platform-menu {
+.platform-bar__inner {
+  padding: 0 var(--size-400);
+}
+
+.platform-breadcrumb {
+  display: none;
+  align-items: baseline;
+  gap: var(--size-200);
+  padding: var(--size-300) 0 var(--size-200);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+
+  &__link {
+    color: var(--tps-text-muted-color);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--tps-heading-color);
+    }
+  }
+
+  &__sep {
+    color: var(--tps-text-muted-color);
+  }
+
+  &__current {
+    color: var(--tps-heading-color);
+  }
+}
+
+.platform-identity-tabs {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  // background-color: var(--tps-bg-secondary-color);
+  gap: var(--size-300);
+  flex-wrap: wrap;
+}
 
-  &__children {
+.platform-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--size-300);
+  // Mobile only: breadcrumb is hidden here, so this row is the first
+  // thing in .platform-bar and needs its own top space. Desktop resets
+  // this back since the breadcrumb row above it already provides it.
+  padding-top: var(--size-300);
+  padding-bottom: var(--size-200);
+  flex: none;
+}
+
+.platform-identity__back {
+  display: flex;
+  align-items: center;
+  color: var(--tps-text-muted-color);
+  text-decoration: none;
+  font-size: 18px;
+
+  &:hover {
+    color: var(--tps-heading-color);
+  }
+}
+
+.platform-identity__link {
+  display: flex;
+  align-items: center;
+  gap: var(--size-300);
+  color: inherit;
+  text-decoration: none;
+}
+
+.platform-identity__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-600);
+  height: var(--size-600);
+  background: #fff;
+  border-radius: var(--tps-border-radius);
+  overflow: hidden;
+  flex: none;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.platform-identity__name {
+  color: var(--tps-heading-color);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.platform-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--size-100);
+  // Forces the whole tab strip onto its own row below the identity block
+  // on mobile, rather than scrolling horizontally alongside it.
+  flex-basis: 100%;
+}
+
+.platform-tabs__tab {
+  flex: none;
+  padding: var(--size-200) var(--size-300) var(--size-100);
+  color: var(--tps-text-muted-color);
+  font-size: 12.5px;
+  // Constant weight across states on purpose: a heavier active weight
+  // widens the text and shifts where the row wraps depending on which
+  // tab is active. Color/background/underline already carry the active
+  // state, so weight doesn't need to.
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    color: var(--tps-heading-color);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &.is-active {
+    color: var(--tps-heading-color);
+    background: var(--tps-bg-secondary-color);
+    border-bottom-color: var(--tps-primary-color);
+  }
+}
+
+.platform-page-body {
+  // A more neutral/base tone than .platform-bar's --tps-bg-color, so the
+  // bar reads as a distinct surface instead of blending into the page
+  // (both were --tps-bg-color before, i.e. identical — matches the design
+  // mock, where the bar is #141414 and the page itself is a separate,
+  // darker #0d0d0d).
+  background: var(--tps-base-color);
+}
+
+.platform-page-body__inner {
+  padding: var(--size-500) var(--size-400) var(--size-600);
+}
+
+.platform-h1 {
+  margin: 0 0 var(--size-600);
+  color: var(--tps-heading-color);
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+@media screen and (min-width: $breakpoint-medium) {
+  .platform-bar__inner {
+    padding: 0 var(--size-600);
+  }
+
+  .platform-breadcrumb {
+    display: flex;
+  }
+
+  .platform-identity-tabs {
+    align-items: flex-end;
+    gap: var(--size-600);
+    flex-wrap: wrap;
+  }
+
+  .platform-identity {
+    gap: var(--size-400);
+    padding-top: 0;
+    padding-bottom: var(--size-300);
+  }
+
+  .platform-identity__back {
     display: none;
   }
 
-  &__item {
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
-    display: inline-block;
+  .platform-identity__link {
+    gap: var(--size-400);
   }
 
-  &__link {
-    margin-right: var(--size-200);
-    padding-left: 1rem;
-    padding-right: 1rem;
-    color: inherit;
-    text-decoration: none;
+  .platform-identity__logo {
+    width: var(--size-800);
+    height: var(--size-800);
   }
 
-  &__link.active {
-    font-weight: bold;
-    pointer-events: none;
+  .platform-identity__name {
+    font-size: 22px;
   }
 
-  &__parent-link {
-    padding-left: 0rem;
-
-    img {
-      margin-right: var(--size-300);
-    }
+  .platform-tabs {
+    flex-basis: auto;
   }
 
-  &__child-link:last-child {
-    padding-right: 0rem;
+  .platform-tabs__tab {
+    padding: var(--size-400) var(--size-500) var(--size-300);
+    font-size: 14.5px;
+    letter-spacing: 0.06em;
   }
 
-  &__item {
-    text-transform: capitalize;
+  .platform-page-body__inner {
+    padding: var(--size-700) var(--size-600) var(--size-800);
   }
 
-  &__icon svg {
-    width: 14px; 
-    height: 14px;
-
-    path {
-      fill: var(--tps-text-color);
-      stroke: var(--tps-text-color);
-      stroke-width: 2px;
-    }
-  } 
-
- 
-  @media screen and (min-width: $breakpoint-small) {
-    justify-content: flex-start;
-
-    &__parent {
-      border-right: 1px solid var(--tps-border-color);
-    }
-
-    &__children {
-      display: flex;
-    }
-
+  .platform-h1 {
+    font-size: 44px;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -94,61 +234,10 @@
     .full-width-element {
       flex-basis: 100%;
       width: 100%;
-       
+
       > img {
         width: 100%;
       }
-    }
-  }
-}
-
-
-// Dropdown
-
-.tps-dropdown {
-  position: relative;
-
-  .tps-dropdown__button {
-    background: transparent;
-    outline: none;
-    border: none;
-    border: 4px solid transparent;
-    border-radius: var(--tps-border-radius);
-
-    &:focus {
-      border: 4px solid var(--tps-icon-btn-color);
-    }
-
-
-    svg path {
-      // Same color that is on the nav svg
-      fill: var(--tps-icon-btn-color);
-    }
-  }
-
-  .tps-dropdown__menu {
-    position: absolute;
-    width: auto;
-    right: 0px; // same as the padding
-    top: 54px;
-    z-index: 9999;
-    padding: 1rem;
-    min-width: 175px;
-    font-size: var(--size-500);
-    background-color: var(--tps-base-color);
-    color: var(--tps-link-color);
-    list-style-type: none;
-    border: 1px solid var(--tps-border-color);
-    border-radius: var(--tps-border-radius);
-    display: none;
-
-    &.active {
-        display: block;
-    }
-
-    a {
-      text-transform: capitalize;
-      cursor: pointer;
     }
   }
 }
