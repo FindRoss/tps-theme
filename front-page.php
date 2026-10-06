@@ -1,10 +1,6 @@
 <?php get_header(); ?>
 
 <?php 
-$cats_to_display = get_field('categories_to_display');
-$players_to_display = array(); 
-$streamers_to_display = array(); 
-
 $used_articles = array();
 ?>
 
@@ -18,12 +14,9 @@ $used_articles = array();
 
           <!-- FEATURED NEWS --> 
           <?php 
-          $featured_news = get_field('featured_news');
           $featured_news_query = new WP_Query(array(
             'post_type'      => 'post', 
-            'post__in'       => $featured_news,
             'posts_per_page' => 2, 
-            'cat'            => 7 
           )); ?>
         
           <?php if ($featured_news_query->have_posts()) : ?>
