@@ -122,7 +122,7 @@
             <!-- YOUTUBE EMBED -->
             <?php if ($youtube_stream) : ?>
               <!-- <h3 class="h6 text-uppercase text-muted fw-bold">Watch on YouTube</h3> -->
-              <div class="mt-4 rounded overflow-hidden">
+              <div class="mt-4 rounded overflow-hidden d-none">
                 <div class="youtube-embed-wrapper" id="video"></div>
               </div>
             <?php endif; ?>
@@ -140,7 +140,7 @@
     </div><!-- .container --> 
   </main>
 
-  <section class="mt-5">
+  <section class="mt-5 pt-5 pb-5">
     <div class="container">
       <?php generateSectionHeadingHTML(array(
          'title' => "Latest {$term_name} Streams",

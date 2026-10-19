@@ -66,8 +66,8 @@ $used_articles = array();
       <div class="container-xxl">
         
         <?php generateSectionHeadingHTML(array(
-          'title' => 'News',
-          'link'  => site_url() . '/category/news/'
+          'title' => 'Resources',
+          'link'  => site_url() . '/category/resources/'
         )); ?>
           
         <div class="row">

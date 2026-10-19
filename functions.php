@@ -8,14 +8,16 @@ function themebs_enqueue_styles() {
 
 add_action( 'wp_enqueue_scripts', 'themebs_enqueue_scripts');
 function themebs_enqueue_scripts() {
+  $ver = wp_get_theme()->get('Version');
+
   wp_enqueue_script('bootstrap5', 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js', [], '5.2.0', true);
 	wp_enqueue_script('popper', 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js', [], '2.11.5', true);
-  wp_enqueue_script('global-script', get_template_directory_uri() . '/assets/js/global.js', [], '1.4', true);
-  wp_enqueue_script('tps-index', get_template_directory_uri() . '/build/index.js', [], '1.1', true);
+  wp_enqueue_script('global-script', get_template_directory_uri() . '/assets/js/global.js', [], $ver, true);
+  wp_enqueue_script('tps-index', get_template_directory_uri() . '/build/index.js', [], $ver, true);
 
   // Single-Player JS
   if (is_singular( 'player' )) {
-    wp_enqueue_script('player-script', get_template_directory_uri() . '/assets/js/player.js', [], '1.8', true);
+    wp_enqueue_script('player-script', get_template_directory_uri() . '/assets/js/player.js', [], $ver, true);
 
     // Get the current post ID
     $post_id = get_the_ID();
@@ -55,7 +57,7 @@ function themebs_enqueue_scripts() {
 
   // Search JS
   if (is_search()) {
-    wp_enqueue_script('custom-search', get_template_directory_uri() . '/assets/js/search.js', [], '1.75', true);
+    wp_enqueue_script('custom-search', get_template_directory_uri() . '/assets/js/search.js', [], $ver, true);
   
     // Pass the WordPress REST API base URL to your JavaScript
     wp_localize_script('custom-search', 'wpApiSettings', array(
@@ -65,11 +67,11 @@ function themebs_enqueue_scripts() {
   };
 
   // Table handler utility (used by both results and players)
-  wp_enqueue_script('table-handler', get_template_directory_uri() . '/assets/js/table-handler.js', [], '1.0', true);
+  wp_enqueue_script('table-handler', get_template_directory_uri() . '/assets/js/table-handler.js', [], $ver, true);
 
   // Platform Results JS
   if (is_page() && get_post_field('post_name', get_the_ID()) === 'results') {
-    wp_enqueue_script('platform-results', get_template_directory_uri() . '/assets/js/platform-results.js', ['table-handler'], '1.0', true);
+    wp_enqueue_script('platform-results', get_template_directory_uri() . '/assets/js/platform-results.js', ['table-handler'], $ver, true);
     wp_localize_script('platform-results', 'platformResultsData', array(
       'root' => esc_url_raw(rest_url()),
     ));
@@ -77,7 +79,7 @@ function themebs_enqueue_scripts() {
 
   // Platform Players JS
   if (is_page() && get_post_field('post_name', get_the_ID()) === 'players') {
-    wp_enqueue_script('platform-players', get_template_directory_uri() . '/assets/js/platform-players.js', ['table-handler'], '1.0', true);
+    wp_enqueue_script('platform-players', get_template_directory_uri() . '/assets/js/platform-players.js', ['table-handler'], $ver, true);
     wp_localize_script('platform-players', 'platformPlayersData', array(
       'root' => esc_url_raw(rest_url()),
     ));
