@@ -34,8 +34,8 @@ $used_articles = array();
 
         <!-- Sidebar -->
         <div class="col-12 col-lg-4">
-          <a href="https://go.wpnaffiliates.com/visit/?bta=236787&brand=americascardroom&afp=tps" target="_blank" rel="sponsored" class="ad-link">
-            <img src="https://toppokerstreamers.com/wp-content/uploads/2026/06/ACR_Poker_Welcome_Bonus_Banner_300_x_300.avif" class="rounded ad-img w-100 h-auto" alt="ACR Poker welcome bonus banner"/>
+          <a href="https://bitcoinchaser.com/?utm_source=toppokerstreamers&utm_medium=banner&utm_campaign=sister_site_promo&utm_content=frontpage_300x300" target="_blank" target="_blank" rel="sponsored" class="ad-link">
+            <img src="https://toppokerstreamers.com/wp-content/uploads/2026/11/Bitcoinchaser_banner_300x300.avif" class="rounded ad-img w-100 h-auto" alt="BitcoinChaser banner"/>
           </a>
         </div>
      
